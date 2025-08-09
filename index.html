@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoGIS Solutions - Inteligencia Geoespacial para Tu Industria</title>
+    <meta name="description" content="Líderes en soluciones GIS. Transformamos datos en decisiones estratégicas con ArcGIS, análisis predictivo y tecnología de vanguardia para gobiernos y empresas.">
+    <meta name="keywords" content="GIS, ArcGIS, mapas interactivos, análisis geoespacial, dashboards, WebGIS, teledetección, consultoría SIG">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #059669;
+            --accent: #f59e0b;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --whatsapp: #25d366;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            scroll-behavior: smooth;
+        }
+        /* Scroll Progress Indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--purple), var(--cyan));
+            z-index: 10001;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        /* WhatsApp Widget */
+        .whatsapp-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .whatsapp-button {
+            width: 60px;
+            height: 60px;
+            background: var(--whatsapp);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.6);
+        }
+        .whatsapp-chat {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(20px) scale(0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .whatsapp-chat.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        .whatsapp-header {
+            background: var(--whatsapp);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+        .whatsapp-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .whatsapp-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .whatsapp-status {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+        .whatsapp-body {
+            padding: 1.5rem;
+        }
+        .whatsapp-message {
+            background: #f3f4f6;
+            padding: 0.75rem 1rem;
+            border-radius: 0 15px 15px 15px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+        }
+        .whatsapp-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid #f3f4f6;
+            border-left: 8px solid transparent;
+        }
+        .whatsapp-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .whatsapp-option {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .whatsapp-option:hover {
+            background: var(--whatsapp);
+            color: white;
+            transform: translateX(5px);
+        }
+        .whatsapp-footer {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .whatsapp-footer a {
+            background: var(--whatsapp);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-footer a:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+        }
+        .whatsapp-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+        .whatsapp-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Responsive adjustments for WhatsApp widget */
+        @media (max-width: 768px) {
+            .whatsapp-widget {
+                bottom: 20px;
+                right: 20px;
+            }
+            .whatsapp-button {
+                width: 55px;
+                height: 55px;
+                font-size: 1.6rem;
+            }
+            .whatsapp-chat {
+                width: 280px;
+                bottom: 75px;
+                right: -10px;
+            }
+        }
+        @media (max-width: 480px) {
+            .whatsapp-chat {
+                width: 260px;
+                right: -20px;
+            }
+            .whatsapp-widget {
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6), 0 0 0 10px rgba(37, 211, 102, 0.1);
+            }
+            100% {
+                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+            }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .cta-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .cta-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
+            color: white;
+            padding: 8rem 2rem 6rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            33% { transform: translateY(-10px) translateX(10px); }
+            66% { transform: translateY(10px) translateX(-5px); }
+            100% { transform: translateY(0px) translateX(0px); }
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(-10px) translateX(-5px); }
+            75% { transform: translateY(-15px) translateX(15px); }
+        }
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-content {
+            order: 1;
+        }
+        .hero-image {
+            order: 2;
+            text-align: center;
+        }
+        .hero-image img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: transform 0.3s ease;
+        }
+        .hero-image img:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            border: 2px solid white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+        }
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+        /* Stats Section */
+        .stats {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: var(--light);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--purple), var(--cyan));
+        }
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+        /* Visual Showcase */
+        .visual-showcase {
+            padding: 6rem 0;
+            background: var(--dark);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .showcase-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .showcase-item:hover {
+            transform: translateY(-10px);
+        }
+        .showcase-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .showcase-item:hover img {
+            transform: scale(1.1);
+        }
+        .showcase-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 2rem;
+            color: white;
+        }
+        .showcase-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .showcase-item p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        /* Products Section */
+        .products {
+            padding: 6rem 0;
+            background: white;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .product-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.15);
+        }
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .product-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        .product-card ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        .product-card li {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .product-card li::before {
+            content: '✓';
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        /* Technologies Section */
+        .technologies {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+        .tech-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .tech-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        .tech-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        .tech-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        .tech-image {
+            text-align: center;
+        }
+        .tech-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        /* Industries Section */
+        .industries {
+            padding: 6rem 0;
+            background: var(--dark);
+            color: white;
+            position: relative;
+        }
+        .industries::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></svg>') repeat;
+        }
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+        .industry-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .industry-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+        .industry-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .industry-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--secondary), var(--cyan));
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>') repeat;
+            animation: float 30s linear infinite;
+        }
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .cta-section h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        .footer-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        .footer-section p, .footer-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+        .footer-section a:hover {
+            color: white;
+        }
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        .footer-bottom {
+            border-top: 1px solid #334155;
+            padding-top: 2rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+        /* Contact Modal */
+        .contact-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        .modal-form input,
+        .modal-form select,
+        .modal-form textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        .modal-form input:focus,
+        .modal-form select:focus,
+        .modal-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .modal-form textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .modal-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .modal-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                z-index: 1000;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-content {
+                order: 2;
+            }
+            .hero-image {
+                order: 1;
+                margin-bottom: 2rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .tech-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .tech-list {
+                grid-template-columns: 1fr;
+            }
+            .features-grid,
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            .industries-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            .cta-section p {
+                font-size: 1.1rem;
+            }
+        }
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        /* Loading states */
+        img {
+            transition: opacity 0.3s ease;
+        }
+        img[loading="lazy"] {
+            opacity: 0;
+        }
+        img[loading="lazy"].loaded {
+            opacity: 1;
+        }
+        /* Utility classes */
+        .text-center { text-align: center; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <!-- Header -->
+    <header id="header">
+        <nav>
+            <a href="#inicio" class="logo">
+                <i class="fas fa-globe-americas"></i> GeoGIS Solutions
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#productos">Productos</a></li>
+                <li><a href="#tecnologias">Tecnologías</a></li>
+                <li><a href="#industrias">Industrias</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="#contacto" class="cta-btn" data-modal="true">Consulta Gratis</a>
+        </nav>
+    </header>
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Inteligencia Geoespacial de Vanguardia</h1>
+                <p>Transformamos datos complejos en decisiones estratégicas con tecnología GIS avanzada. Soluciones personalizadas para gobiernos, empresas y consultorías que buscan liderar con información geoespacial.</p>
+                <div class="hero-buttons">
+                    <a href="#productos" class="btn-primary">
+                        <i class="fas fa-rocket"></i> Explorar Soluciones
+                    </a>
+                    <a href="#contacto" class="btn-secondary" data-modal="true">Consulta Gratuita</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="public/compu.jpg" alt="Dashboard GIS Interactivo - Análisis de Madrid" loading="eager">
+            </div>
+        </div>
+    </section>
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item" data-count="500">
+                    <h3>0+</h3>
+                    <p>Proyectos Completados</p>
+                </div>
+                <div class="stat-item" data-count="50">
+                    <h3>0+</h3>
+                    <p>Empresas Satisfechas</p>
+                </div>
+                <div class="stat-item" data-count="12">
+                    <h3>0</h3>
+                    <p>Industrias Atendidas</p>
+                </div>
+                <div class="stat-item" data-count="99">
+                    <h3>0%</h3>
+                    <p>Precisión en Análisis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Features Section -->
+    <section class="features" id="servicios">
+        <div class="container">
+            <h2 class="section-title">¿Por Qué Somos Líderes en GIS?</h2>
+            <p class="section-subtitle">Combinamos experiencia técnica, tecnología de vanguardia y metodologías probadas para entregar resultados excepcionales</p>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Inteligencia Artificial Aplicada</h3>
+                    <p>Utilizamos algoritmos de machine learning y modelos predictivos para extraer insights valiosos de tus datos geoespaciales, optimizando la toma de decisiones estratégicas.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h3>Teledetección Avanzada</h3>
+                    <p>Procesamiento de imágenes satelitales de alta resolución, análisis multiespectrales y monitoreo en tiempo real para proyectos de gran escala.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>Visualización 3D Inmersiva</h3>
+                    <p>Modelos tridimensionales interactivos, realidad aumentada y experiencias inmersivas que transforman la comprensión de datos espaciales.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Infraestructura en la Nube</h3>
+                    <p>Soluciones escalables con ArcGIS Enterprise, acceso global 24/7 y sincronización automática de datos entre equipos distribuidos.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Seguridad Empresarial</h3>
+                    <p>Protocolos de seguridad de nivel militar, encriptación end-to-end y cumplimiento de estándares internacionales de protección de datos.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3>Soporte Especializado</h3>
+                    <p>Equipo de expertos certificados en ArcGIS, soporte técnico 24/7 y capacitación continua para maximizar el ROI de tu inversión.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Visual Showcase -->
+    <section class="visual-showcase">
+        <div class="container">
+            <h2 class="section-title">Nuestras Soluciones en Acción</h2>
+            <p class="section-subtitle">Descubre cómo transformamos datos complejos en visualizaciones poderosas e insights accionables</p>
+            
+            <div class="showcase-grid">
+                <div class="showcase-item">
+                    <img src="public/layer2.png" alt="Análisis Geoespacial Multidimensional" loading="lazy">
+                    <div class="showcase-overlay">
+                        <h4>Análisis Multidimensional</h4>
+                        <p>Procesamiento avanzado de múltiples capas de datos para análisis complejos</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <img src="public/web.png" alt="Mapas Interactivos ArcGIS Pro" loading="lazy">
+                    <div class="showcase-overlay">
+                        <h4>WebGIS Interactivo</h4>
+                        <p>Plataformas web personalizadas con herramientas de análisis en tiempo real</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <img src="public/dashborads.jpg" alt="Business Intelligence Geoespacial" loading="lazy">
+                    <div class="showcase-overlay">
+                        <h4>Business Intelligence</h4>
+                        <p>Dashboards ejecutivos con métricas geoespaciales para decisiones estratégicas</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <img src="public/gis.png" alt="Análisis Predictivo 3D Urbano" loading="lazy">
+                    <div class="showcase-overlay">
+                        <h4>Modelado Predictivo 3D</h4>
+                        <p>Simulaciones tridimensionales para planificación urbana y análisis de riesgos</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <img src="public/layer.png" alt="Capas de Análisis Espacial" loading="lazy">
+                    <div class="showcase-overlay">
+                        <h4>Análisis Multicapa</h4>
+                        <p>Superposición de datasets complejos para insights profundos</p>
+                    </div>
+                </div>
+                <div class="showcase-item">
+                    <img src="public/graficos.png" alt="Aplicaciones Móviles Field Maps" loading="lazy">
+                    <div class="showcase-overlay">
+                        <h4>Soluciones Móviles</h4>
+                        <p>Aplicaciones nativas para recolección de datos en campo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Products Section -->
+    <section class="products" id="productos">
+        <div class="container">
+            <h2 class="section-title">Portafolio Completo de Soluciones</h2>
+            <p class="section-subtitle">Desde visualizaciones básicas hasta plataformas empresariales completas, tenemos la solución perfecta para tu organización</p>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-badge">Básico</div>
+                    <h3>Mapas e Informes Estáticos</h3>
+                    <ul>
+                        <li>Mapas en alta resolución (PNG, JPEG, PDF)</li>
+                        <li>Informes geográficos profesionales</li>
+                        <li>Análisis espacial básico</li>
+                        <li>Cartografía temática personalizada</li>
+                        <li>Ideal para reportes y presentaciones</li>
+                    </ul>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge">Intermedio</div>
+                    <h3>Dashboards Interactivos</h3>
+                    <ul>
+                        <li>ArcGIS Dashboards personalizados</li>
+                        <li>Widgets interactivos y KPIs</li>
+                        <li>Actualización en tiempo real</li>
+                        <li>Integración con bases de datos</li>
+                        <li>Perfecto para monitoreo operativo</li>
+                    </ul>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge">Estándar</div>
+                    <h3>WebGIS Interactivo</h3>
+                    <ul>
+                        <li>Mapas web completamente funcionales</li>
+                        <li>Herramientas de análisis integradas</li>
+                        <li>Interfaz responsive y personalizable</li>
+                        <li>Control de usuarios y permisos</li>
+                        <li>Acceso desde cualquier dispositivo</li>
+                    </ul>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge">Avanzado</div>
+                    <h3>Aplicaciones Móviles GIS</h3>
+                    <ul>
+                        <li>Field Maps para trabajo en campo</li>
+                        <li>Survey123 para recolección de datos</li>
+                        <li>QuickCapture para registro rápido</li>
+                        <li>Sincronización offline/online</li>
+                        <li>Optimizado para tablets y smartphones</li>
+                    </ul>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge">Enterprise</div>
+                    <h3>Infraestructura GIS Empresarial</h3>
+                    <ul>
+                        <li>ArcGIS Enterprise completo</li>
+                        <li>Servidor de mapas dedicado</li>
+                        <li>Gestión avanzada de geodatabases</li>
+                        <li>Integración con sistemas ERP/CRM</li>
+                        <li>Arquitectura escalable y segura</li>
+                    </ul>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge">Premium</div>
+                    <h3>Plataforma Personalizada</h3>
+                    <ul>
+                        <li>Desarrollo completamente a medida</li>
+                        <li>APIs y microservicios personalizados</li>
+                        <li>Visualización 3D y realidad aumentada</li>
+                        <li>Machine Learning integrado</li>
+                        <li>Solución integral end-to-end</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Technologies Section -->
+    <section class="technologies" id="tecnologias">
+        <div class="container">
+            <h2 class="section-title">Tecnologías de Vanguardia</h2>
+            <p class="section-subtitle">Utilizamos las herramientas más avanzadas del mercado para garantizar soluciones robustas y escalables</p>
+            
+            <div class="tech-grid">
+                <div class="tech-content">
+                    <h3>Stack Tecnológico Completo</h3>
+                    <p>Nuestro expertise abarca desde herramientas de escritorio hasta soluciones en la nube, integrando lo mejor de cada tecnología para crear soluciones híbridas poderosas.</p>
+                    
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <div>
+                                <strong>ArcGIS Pro</strong><br>
+                                <small>Análisis avanzado</small>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div>
+                                <strong>ArcGIS Online</strong><br>
+                                <small>Plataforma en la nube</small>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fab fa-python"></i>
+                            </div>
+                            <div>
+                                <strong>Python & ArcPy</strong><br>
+                                <small>Automatización</small>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div>
+                                <strong>JavaScript APIs</strong><br>
+                                <small>Desarrollo web</small>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-satellite"></i>
+                            </div>
+                            <div>
+                                <strong>Sentinel & Landsat</strong><br>
+                                <small>Imágenes satelitales</small>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-item">
+                            <div class="tech-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div>
+                                <strong>Power BI & Tableau</strong><br>
+                                <small>Business Intelligence</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#contacto" class="btn-primary" data-modal="true">
+                        <i class="fas fa-cogs"></i> Conocer Más Tecnologías
+                    </a>
+                </div>
+                
+                <div class="tech-image">
+                    <img src="public/elevacion.jpg" alt="ArcGIS Pro - Análisis de Suitabilidad en California" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Industries Section -->
+    <section class="industries" id="industrias">
+        <div class="container">
+            <h2 class="section-title">Industrias que Transformamos</h2>
+            <p class="section-subtitle">Experiencia comprobada en sectores estratégicos con soluciones especializadas que generan valor real</p>
+            <div class="industries-grid">
+                <div class="industry-card">
+                    <h4><i class="fas fa-building"></i> Arquitectura y Construcción</h4>
+                    <p>Gestión de infraestructura, análisis de impacto ambiental, modelado 3D y seguimiento de obras en tiempo real</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-store"></i> Retail y Comercio</h4>
+                    <p>Selección óptima de sitios, análisis de mercado, optimización logística y estudios de comportamiento del consumidor</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-leaf"></i> Recursos Naturales</h4>
+                    <p>Monitoreo forestal, gestión de cuencas hidrográficas, mapeo de biodiversidad y análisis de cambio climático</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-bolt"></i> Energía y Utilities</h4>
+                    <p>Gestión de redes eléctricas, sitios para energías renovables, análisis de riesgos en ductos y infraestructura crítica</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-heartbeat"></i> Salud Pública</h4>
+                    <p>Mapeo de accesibilidad a servicios, epidemiología espacial, planificación hospitalaria y análisis de cobertura</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-landmark"></i> Gobierno y Sector Público</h4>
+                    <p>Catastro digital, planificación urbana, gestión de servicios públicos y transparencia gubernamental</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-truck"></i> Transporte y Logística</h4>
+                    <p>Optimización de rutas, análisis de tráfico, gestión de flotas y planificación de infraestructura vial</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-shield-alt"></i> Seguridad y Emergencias</h4>
+                    <p>Mapeo de riesgos, respuesta a desastres, planificación de evacuaciones y análisis de criminalidad</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-signal"></i> Telecomunicaciones</h4>
+                    <p>Análisis de cobertura, planificación de torres, optimización de redes y estudios de demanda</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-tint"></i> Gestión Hídrica</h4>
+                    <p>Monitoreo de recursos hídricos, modelado de inundaciones, calidad del agua y gestión de sequías</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-vote-yea"></i> Procesos Electorales</h4>
+                    <p>Análisis electoral territorial, logística de votación, mapeo de tendencias y participación ciudadana</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-industry"></i> Minería y Petróleo</h4>
+                    <p>Exploración geológica, monitoreo ambiental, análisis de concesiones y gestión de impactos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="cta-section" id="contacto">
+        <div class="cta-content">
+            <h2>¿Listo para Revolucionar Tu Organización?</h2>
+            <p>Únete a las empresas líderes que ya utilizan nuestras soluciones GIS para tomar decisiones más inteligentes, optimizar recursos y acelerar el crecimiento.</p>
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                <a href="mailto:info@geogis.solutions" class="btn-primary">
+                    <i class="fas fa-envelope"></i> Solicitar Demo
+                </a>
+                <a href="tel:+523334028621" class="btn-secondary">
+                    <i class="fas fa-phone"></i> Llamar Ahora
+                </a>
+                <button class="btn-secondary" data-modal="true">
+                    <i class="fas fa-comments"></i> Chat Directo
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-globe-americas"></i> GeoGIS Solutions</h4>
+                    <p>Líderes en soluciones geoespaciales para industrias estratégicas. Transformamos datos complejos en inteligencia accionable que impulsa el crecimiento y la innovación.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Soluciones Principales</h4>
+                    <p><a href="#productos">Mapas Interactivos</a></p>
+                    <p><a href="#productos">Dashboards Ejecutivos</a></p>
+                    <p><a href="#productos">Aplicaciones Móviles</a></p>
+                    <p><a href="#productos">Análisis Predictivo</a></p>
+                    <p><a href="#productos">Infraestructura Enterprise</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Industrias Especializadas</h4>
+                    <p><a href="#industrias">Gobierno y Sector Público</a></p>
+                    <p><a href="#industrias">Energía y Utilities</a></p>
+                    <p><a href="#industrias">Recursos Naturales</a></p>
+                    <p><a href="#industrias">Transporte y Logística</a></p>
+                    <p><a href="#industrias">Telecomunicaciones</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto Directo</h4>
+                    <p><i class="fas fa-envelope"></i> info@geogis.solutions</p>
+                    <p><i class="fas fa-phone"></i> +52 33 4028 6621</p>
+                    <p><i class="fas fa-whatsapp"></i> +52 33 4028 6621</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Guadalajara, Jalisco, México</p>
+                    <p><i class="fas fa-clock"></i> Lun-Vie 9:00 AM - 6:00 PM CST</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 GeoGIS Solutions. Todos los derechos reservados. | <a href="#">Política de Privacidad</a> | <a href="#">Términos de Servicio</a> | <a href="#">Aviso Legal</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- WhatsApp Widget -->
+    <div class="whatsapp-widget" id="whatsappWidget">
+        <div class="whatsapp-button" onclick="toggleWhatsAppChat()">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="whatsapp-chat" id="whatsappChat">
+            <div class="whatsapp-header">
+                <button class="whatsapp-close" onclick="closeWhatsAppChat()">&times;</button>
+                <div class="whatsapp-avatar">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div class="whatsapp-info">
+                    <h4>GeoGIS Solutions</h4>
+                    <div class="whatsapp-status">
+                        <span class="status-dot"></span>
+                        Generalmente responde en pocos minutos
+                    </div>
+                </div>
+            </div>
+            <div class="whatsapp-body">
+                <div class="whatsapp-message">
+                    ¡Hola! 👋 Soy especialista en soluciones GIS. ¿En qué puedo ayudarte hoy?
+                </div>
+                <div class="whatsapp-options">
+                    <a href="https://wa.me/523334028621?text=Hola%2C%20me%20interesa%20conocer%20sus%20soluciones%20GIS%20para%20mi%20empresa" class="whatsapp-option">
+                        <i class="fas fa-building"></i>
+                        Soluciones para empresas
+                    </a>
+                    <a href="https://wa.me/523334028621?text=Necesito%20una%20consulta%20gratuita%20sobre%20an%C3%A1lisis%20geoespacial" class="whatsapp-option">
+                        <i class="fas fa-comments"></i>
+                        Consulta gratuita
+                    </a>
+                    <a href="https://wa.me/523334028621?text=Me%20interesa%20ver%20una%20demo%20de%20sus%20productos%20GIS" class="whatsapp-option">
+                        <i class="fas fa-play-circle"></i>
+                        Ver demo en vivo
+                    </a>
+                    <a href="https://wa.me/523334028621?text=Tengo%20un%20proyecto%20espec%C3%ADfico%20que%20requiere%20an%C3%A1lisis%20geoespacial" class="whatsapp-option">
+                        <i class="fas fa-project-diagram"></i>
+                        Proyecto específico
+                    </a>
+                </div>
+            </div>
+            <div class="whatsapp-footer">
+                <a href="https://wa.me/523334028621?text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20GeoGIS%20Solutions">
+                    <i class="fab fa-whatsapp"></i>
+                    Iniciar conversación
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Modal -->
+    <div class="contact-modal" id="contactModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeContactModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">
+                <i class="fas fa-rocket"></i> Consulta Gratuita Personalizada
+            </h3>
+            <form class="modal-form" id="contactForm">
+                <input type="text" name="name" placeholder="Nombre completo *" required>
+                <input type="email" name="email" placeholder="Email corporativo *" required>
+                <input type="tel" name="phone" placeholder="Teléfono">
+                <input type="text" name="company" placeholder="Empresa u organización">
+                
+                <select name="industry">
+                    <option value="">Selecciona tu industria</option>
+                    <option value="gobierno">Gobierno y Sector Público</option>
+                    <option value="energia">Energía y Utilities</option>
+                    <option value="construccion">Construcción e Infraestructura</option>
+                    <option value="recursos">Recursos Naturales</option>
+                    <option value="telecomunicaciones">Telecomunicaciones</option>
+                    <option value="transporte">Transporte y Logística</option>
+                    <option value="salud">Salud Pública</option>
+                    <option value="retail">Retail y Comercio</option>
+                    <option value="mineria">Minería y Petróleo</option>
+                    <option value="electoral">Procesos Electorales</option>
+                    <option value="otro">Otro</option>
+                </select>
+                
+                <select name="service">
+                    <option value="">¿Qué tipo de solución necesitas?</option>
+                    <option value="mapas">Mapas e Informes Estáticos</option>
+                    <option value="dashboards">Dashboards Interactivos</option>
+                    <option value="webgis">WebGIS Interactivo</option>
+                    <option value="movil">Aplicaciones Móviles</option>
+                    <option value="enterprise">Infraestructura Enterprise</option>
+                    <option value="personalizada">Plataforma Personalizada</option>
+                    <option value="consultoria">Consultoría y Análisis</option>
+                    <option value="no_seguro">No estoy seguro</option>
+                </select>
+                
+                <textarea name="message" placeholder="Describe tu proyecto, necesidades específicas o desafíos que enfrentas..."></textarea>
+                
+                <button type="submit" class="modal-submit">
+                    <i class="fas fa-paper-plane"></i> Enviar Consulta
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">También puedes contactarnos directamente:</p>
+                <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <a href="mailto:info@geogis.solutions" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope"></i> info@geogis.solutions
+                    </a>
+                    <a href="tel:+523334028621" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-phone"></i> +52 33 4028 6621
+                    </a>
+                    <a href="https://wa.me/523334028621" style="color: var(--secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // WhatsApp Widget Functions
+        function toggleWhatsAppChat() {
+            const chat = document.getElementById('whatsappChat');
+            chat.classList.toggle('active');
+        }
+        
+        function closeWhatsAppChat() {
+            const chat = document.getElementById('whatsappChat');
+            chat.classList.remove('active');
+        }
+        
+        // Close WhatsApp chat when clicking outside
+        document.addEventListener('click', (e) => {
+            const widget = document.getElementById('whatsappWidget');
+            const chat = document.getElementById('whatsappChat');
+            if (!widget.contains(e.target) && chat.classList.contains('active')) {
+                closeWhatsAppChat();
+            }
+        });
+        
+        // Global functions for WhatsApp widget
+        window.toggleWhatsAppChat = toggleWhatsAppChat;
+        window.closeWhatsAppChat = closeWhatsAppChat;
+        
+        // Variables globales
+        let scrollProgress = document.getElementById('scrollProgress');
+        let header = document.getElementById('header');
+        let navLinks = document.getElementById('navLinks');
+        let mobileToggle = document.getElementById('mobileToggle');
+        let contactModal = document.getElementById('contactModal');
+        let contactForm = document.getElementById('contactForm');
+        let lastScrollTop = 0;
+        
+        // Scroll Progress Indicator
+        function updateScrollProgress() {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        }
+        
+        // Header Effects
+        function updateHeader() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Background and shadow effects
+            if (scrollTop > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+            
+            // Hide/show header on scroll
+            if (scrollTop > lastScrollTop && scrollTop > 500) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop;
+        }
+        
+        // Smooth Scrolling
+        function initSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        // Close mobile menu if open
+                        navLinks.classList.remove('active');
+                        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            });
+        }
+        
+        // Mobile Menu Toggle
+        function initMobileMenu() {
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                
+                if (navLinks.classList.contains('active')) {
+                    mobileToggle.innerHTML = '<i class="fas fa-times"></i>';
+                } else {
+                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+            // Close menu when clicking on a link
+            navLinks.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    navLinks.classList.remove('active');
+                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        }
+        
+        // Intersection Observer for Animations
+        function initAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            // Apply to elements
+            document.querySelectorAll('.feature-card, .product-card, .industry-card, .showcase-item, .tech-item').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'all 0.6s ease';
+                observer.observe(element);
+            });
+            // Section reveals
+            document.querySelectorAll('section').forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(50px)';
+                section.style.transition = 'all 0.8s ease';
+                section.style.transitionDelay = `${index * 0.1}s`;
+                observer.observe(section);
+            });
+        }
+        
+        // Animated Counters
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                const current = Math.floor(start);
+                element.textContent = current + (target === 99 ? '%' : '+');
+                if (start >= target) {
+                    element.textContent = target + (target === 99 ? '%' : '+');
+                    clearInterval(timer);
+                }
+            }, 16);
+        }
+        
+        function initCounters() {
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const h3 = entry.target.querySelector('h3');
+                        const targetValue = parseInt(entry.target.dataset.count);
+                        animateCounter(h3, targetValue);
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            });
+            document.querySelectorAll('.stat-item').forEach(item => {
+                statsObserver.observe(item);
+            });
+        }
+        
+        // Image Lazy Loading
+        function initLazyLoading() {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('loaded');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+        
+        // Contact Modal Functions
+        function openContactModal() {
+            contactModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeContactModal() {
+            contactModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Global functions for modal
+        window.openContactModal = openContactModal;
+        window.closeContactModal = closeContactModal;
+        
+        function initContactModal() {
+            // Open modal with buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.hasAttribute('data-modal') || e.target.closest('[data-modal]')) {
+                    e.preventDefault();
+                    openContactModal();
+                }
+            });
+            // Close modal with escape key or click outside
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeContactModal();
+            });
+            document.addEventListener('click', (e) => {
+                if (e.target === contactModal) closeContactModal();
+            });
+            // Form submission
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const submitBtn = contactForm.querySelector('.modal-submit');
+                const originalText = submitBtn.innerHTML;
+                
+                // Simulate sending
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+                submitBtn.disabled = true;
+                
+                // Collect form data
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Simulate API call
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado! Te contactaremos pronto';
+                    submitBtn.style.background = 'var(--secondary)';
+                    
+                    // Log form data (replace with actual API call)
+                    console.log('Form Data:', data);
+                    
+                    setTimeout(() => {
+                        closeContactModal();
+                        contactForm.reset();
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--purple))';
+                        
+                        // Show success message
+                        showNotification('¡Gracias! Hemos recibido tu consulta. Te contactaremos dentro de 24 horas.', 'success');
+                    }, 2000);
+                }, 1500);
+            });
+        }
+        
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--secondary)' : 'var(--primary)'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                z-index: 10002;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+        
+        // Parallax Effects
+        function initParallax() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const heroImage = document.querySelector('.hero-image img');
+                
+                if (heroImage && scrolled < window.innerHeight) {
+                    const rate = scrolled * 0.3;
+                    heroImage.style.transform = `perspective(1000px) rotateY(-5deg) rotateX(5deg) translateY(${rate}px)`;
+                }
+            });
+        }
+        
+        // Floating Elements
+        function addFloatingElements() {
+            const hero = document.querySelector('.hero');
+            if (!hero) return;
+            
+            for (let i = 0; i < 8; i++) {
+                const float = document.createElement('div');
+                float.style.cssText = `
+                    position: absolute;
+                    width: ${4 + Math.random() * 4}px;
+                    height: ${4 + Math.random() * 4}px;
+                    background: rgba(255, 255, 255, ${0.2 + Math.random() * 0.3});
+                    border-radius: 50%;
+                    pointer-events: none;
+                    animation: floating ${8 + Math.random() * 4}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 2}s;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                `;
+                hero.appendChild(float);
+            }
+        }
+        
+        // Performance Optimization
+        function preloadCriticalImages() {
+            const criticalImages = [
+                'public/compu.jpg',
+                'public/layer2.png',
+                'public/web.png'
+            ];
+            
+            criticalImages.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+        
+        // Keyboard Navigation
+        function initKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            e.preventDefault();
+                            document.querySelector('#inicio').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            document.querySelector('#servicios').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                        case '3':
+                            e.preventDefault();
+                            document.querySelector('#productos').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                        case '4':
+                            e.preventDefault();
+                            document.querySelector('#contacto').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                    }
+                }
+            });
+        }
+        
+        // Enhanced Hover Effects
+        function initHoverEffects() {
+            document.querySelectorAll('.feature-card, .product-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            // Showcase items special effects
+            document.querySelectorAll('.showcase-item').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    const overlay = item.querySelector('.showcase-overlay');
+                    if (overlay) {
+                        overlay.style.background = 'linear-gradient(transparent, rgba(37, 99, 235, 0.9))';
+                    }
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    const overlay = item.querySelector('.showcase-overlay');
+                    if (overlay) {
+                        overlay.style.background = 'linear-gradient(transparent, rgba(0, 0, 0, 0.8))';
+                    }
+                });
+            });
+        }
+        
+        // Tech Item Staggered Animation
+        function initTechAnimation() {
+            document.querySelectorAll('.tech-item').forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.1}s`;
+                item.classList.add('fade-in');
+            });
+        }
+        
+        // Scroll Event Listener
+        function initScrollEvents() {
+            let ticking = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateScrollProgress();
+                        updateHeader();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+        
+        // Resize Handler
+        function initResizeHandler() {
+            window.addEventListener('resize', () => {
+                // Close mobile menu on resize
+                if (window.innerWidth > 768) {
+                    navLinks.classList.remove('active');
+                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        }
+        
+        // Form Validation Enhancement
+        function initFormValidation() {
+            const inputs = contactForm.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => {
+                    if (input.hasAttribute('required') && !input.value.trim()) {
+                        input.style.borderColor = '#ef4444';
+                    } else if (input.type === 'email' && input.value && !isValidEmail(input.value)) {
+                        input.style.borderColor = '#ef4444';
+                    } else {
+                        input.style.borderColor = '#e2e8f0';
+                    }
+                });
+                
+                input.addEventListener('focus', () => {
+                    input.style.borderColor = 'var(--primary)';
+                });
+            });
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Easter Egg - Konami Code
+        function initEasterEgg() {
+            let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+            let userInput = [];
+            
+            document.addEventListener('keydown', (e) => {
+                userInput.push(e.code);
+                userInput = userInput.slice(-konamiCode.length);
+                
+                if (JSON.stringify(userInput) === JSON.stringify(konamiCode)) {
+                    showNotification('🎉 ¡Código Konami activado! Eres un verdadero geek GIS 🗺️', 'success');
+                    // Add special effect
+                    document.body.style.animation = 'rainbow 2s infinite';
+                    setTimeout(() => {
+                        document.body.style.animation = '';
+                    }, 3000);
+                }
+            });
+        }
+        
+        // Rainbow animation for easter egg
+        const rainbowCSS = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        const style = document.createElement('style');
+        style.textContent = rainbowCSS;
+        document.head.appendChild(style);
+        
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            // Core functionality
+            initSmoothScrolling();
+            initMobileMenu();
+            initAnimations();
+            initCounters();
+            initLazyLoading();
+            initContactModal();
+            initScrollEvents();
+            initResizeHandler();
+            initFormValidation();
+            
+            // Enhanced features
+            initParallax();
+            initHoverEffects();
+            initTechAnimation();
+            initKeyboardNavigation();
+            initEasterEgg();
+            
+            // Performance
+            preloadCriticalImages();
+            addFloatingElements();
+            
+            // Console message
+            console.log('🗺️ GeoGIS Solutions - Landing Page Loaded Successfully!');
+            console.log('💡 Tips:');
+            console.log('- Use Ctrl+1, Ctrl+2, Ctrl+3, Ctrl+4 for quick navigation');
+            console.log('- Try the Konami Code for a surprise! ↑↑↓↓←→←→BA');
+            console.log('- All animations are optimized with requestAnimationFrame');
+            
+            // Load complete notification
+            setTimeout(() => {
+                showNotification('¡Bienvenido a GeoGIS Solutions! 🌍', 'info');
+            }, 1000);
+        });
+        
+        // Service Worker Registration (optional for PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Error handling
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e.error);
+        });
+        
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            const loadTime = performance.now();
+            console.log(`Page loaded in ${Math.round(loadTime)}ms`);
+        });
+    </script>
+</body>
+</html>
