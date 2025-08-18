@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeoGIS Solutions</title>
-    <meta name="description" content="Líderes en soluciones GIS. Transformamos datos en decisiones estratégicas con ArcGIS, análisis predictivo y tecnología de vanguardia para gobiernos y empresas.">
-    <meta name="keywords" content="GIS, ArcGIS, mapas interactivos, análisis geoespacial, dashboards, WebGIS, teledetección, consultoría SIG">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+    <title>GeoGIS Solutions - Especialistas en Inteligencia Geoespacial</title>
+    <meta name="description" content="Especialistas en soluciones GIS. Convertimos datos territoriales en mapas, dashboards y aplicaciones que apoyan decisiones de gobierno y empresa.">
+    <meta name="keywords" content="GIS, ArcGIS, mapas interactivos, análisis geoespacial, dashboards, WebGIS, estudios mercado territorial, consultoría SIG">
+    <link rel="icon" type="image/png" href="public/favicon.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -15,13 +15,13 @@
             box-sizing: border-box;
         }
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #059669;
-            --accent: #f59e0b;
-            --purple: #8b5cf6;
-            --cyan: #06b6d4;
-            --dark: #0f172a;
+            /* Colores basados en el favicon */
+            --primary: #4f46e5; /* Azul principal */
+            --primary-dark: #3730a3; /* Azul oscuro */
+            --secondary: #0891b2; /* Celeste/cyan */
+            --accent: #7c3aed; /* Púrpura */
+            --success: #059669; /* Verde para checks */
+            --dark: #1e293b;
             --gray: #64748b;
             --light: #f8fafc;
             --white: #ffffff;
@@ -33,13 +33,14 @@
             color: var(--dark);
             scroll-behavior: smooth;
         }
+        
         /* Scroll Progress Indicator */
         .scroll-progress {
             position: fixed;
             top: 0;
             left: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--purple), var(--cyan));
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
             z-index: 10001;
             transition: width 0.3s ease;
             width: 0%;
@@ -282,13 +283,13 @@
             padding: 1rem 2rem;
         }
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
             text-decoration: none;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
         }
         .nav-links {
             display: flex;
@@ -332,7 +333,7 @@
         .cta-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
         }
         .mobile-toggle {
             display: none;
@@ -342,9 +343,10 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
+        
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--secondary) 100%);
             color: white;
             padding: 8rem 2rem 6rem;
             position: relative;
@@ -368,12 +370,6 @@
             33% { transform: translateY(-10px) translateX(10px); }
             66% { transform: translateY(10px) translateX(-5px); }
             100% { transform: translateY(0px) translateX(0px); }
-        }
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            25% { transform: translateY(-20px) translateX(10px); }
-            50% { transform: translateY(-10px) translateX(-5px); }
-            75% { transform: translateY(-15px) translateX(15px); }
         }
         .hero-container {
             max-width: 1200px;
@@ -457,6 +453,7 @@
             background: white;
             color: var(--primary);
         }
+        
         /* Container */
         .container {
             max-width: 1200px;
@@ -477,27 +474,7 @@
             max-width: 600px;
             margin: 0 auto 4rem;
         }
-        /* Stats Section */
-        .stats {
-            padding: 4rem 0;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
-            color: white;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            text-align: center;
-        }
-        .stat-item h3 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-        .stat-item p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
+        
         /* Features Section */
         .features {
             padding: 6rem 0;
@@ -525,7 +502,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--purple), var(--cyan));
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
         }
         .feature-card:hover {
             transform: translateY(-10px) scale(1.02);
@@ -534,7 +511,7 @@
         .feature-icon {
             width: 70px;
             height: 70px;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -553,6 +530,7 @@
             color: var(--gray);
             line-height: 1.6;
         }
+        
         /* Visual Showcase */
         .visual-showcase {
             padding: 6rem 0;
@@ -604,6 +582,7 @@
             font-size: 0.9rem;
             opacity: 0.9;
         }
+        
         /* Products Section */
         .products {
             padding: 6rem 0;
@@ -622,17 +601,17 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
-            border: 1px solid rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.1);
         }
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 25px 50px rgba(79, 70, 229, 0.15);
         }
         .product-badge {
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 20px;
@@ -659,10 +638,11 @@
         }
         .product-card li::before {
             content: '✓';
-            color: var(--secondary);
+            color: var(--success);
             font-weight: bold;
             font-size: 1.1rem;
         }
+        
         /* Technologies Section */
         .technologies {
             padding: 6rem 0;
@@ -704,7 +684,7 @@
         .tech-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -722,6 +702,7 @@
             border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
+        
         /* Industries Section */
         .industries {
             padding: 6rem 0;
@@ -771,9 +752,10 @@
             opacity: 0.9;
             line-height: 1.5;
         }
+        
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, var(--secondary), var(--cyan));
+            background: linear-gradient(135deg, var(--success), var(--secondary));
             color: white;
             padding: 6rem 0;
             text-align: center;
@@ -806,6 +788,7 @@
             margin-bottom: 2.5rem;
             opacity: 0.9;
         }
+        
         /* Footer */
         footer {
             background: var(--dark);
@@ -822,7 +805,7 @@
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
-            color: var(--accent);
+            color: var(--secondary);
         }
         .footer-section p, .footer-section a {
             color: #cbd5e1;
@@ -858,6 +841,7 @@
             text-align: center;
             color: #94a3b8;
         }
+        
         /* Contact Modal */
         .contact-modal {
             display: none;
@@ -916,7 +900,7 @@
         .modal-submit {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
             border: none;
             border-radius: 10px;
@@ -927,8 +911,9 @@
         }
         .modal-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
         }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -980,9 +965,6 @@
             .industries-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
             .cta-section h2 {
                 font-size: 2rem;
             }
@@ -990,6 +972,7 @@
                 font-size: 1.1rem;
             }
         }
+        
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -1004,6 +987,7 @@
         .fade-in {
             animation: fadeInUp 0.6s ease-out forwards;
         }
+        
         /* Loading states */
         img {
             transition: opacity 0.3s ease;
@@ -1014,6 +998,7 @@
         img[loading="lazy"].loaded {
             opacity: 1;
         }
+        
         /* Utility classes */
         .text-center { text-align: center; }
         .mb-1 { margin-bottom: 0.25rem; }
@@ -1029,11 +1014,12 @@
 <body>
     <!-- Scroll Progress Indicator -->
     <div class="scroll-progress" id="scrollProgress"></div>
+    
     <!-- Header -->
     <header id="header">
         <nav>
             <a href="#inicio" class="logo">
-                <i class="fas fa-globe-americas"></i> GeoGIS Solutions
+                <img src="public/logo.png" alt="GeoGIS Solutions">
             </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#inicio">Inicio</a></li>
@@ -1049,156 +1035,137 @@
             <a href="#contacto" class="cta-btn" data-modal="true">Consulta Gratis</a>
         </nav>
     </header>
+    
     <!-- Hero Section -->
     <section class="hero" id="inicio">
         <div class="hero-container">
             <div class="hero-content">
-                <h1>Inteligencia Geoespacial de Vanguardia</h1>
-                <p>Transformamos datos complejos en decisiones estratégicas con tecnología GIS avanzada. Soluciones personalizadas para gobiernos, empresas y consultorías que buscan liderar con información geoespacial.</p>
+                <h1>Inteligencia geoespacial para decidir mejor</h1>
+                <p>Convertimos datos territoriales en mapas, tableros y aplicaciones que apoyan decisiones de gobierno y empresa. Trabajamos con ArcGIS y metodologías claras para entregar resultados medibles.</p>
                 <div class="hero-buttons">
                     <a href="#productos" class="btn-primary">
-                        <i class="fas fa-rocket"></i> Explorar Soluciones
+                        <i class="fas fa-map"></i> Explorar Soluciones
                     </a>
                     <a href="#contacto" class="btn-secondary" data-modal="true">Consulta Gratuita</a>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="public/compu.jpg" alt="Dashboard GIS Interactivo - Análisis de Madrid" loading="eager">
+                <img src="public/compu.jpg" alt="Dashboard GIS Interactivo" loading="eager">
             </div>
         </div>
     </section>
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item" data-count="500">
-                    <h3>0+</h3>
-                    <p>Proyectos Completados</p>
-                </div>
-                <div class="stat-item" data-count="50">
-                    <h3>0+</h3>
-                    <p>Empresas Satisfechas</p>
-                </div>
-                <div class="stat-item" data-count="12">
-                    <h3>0</h3>
-                    <p>Industrias Atendidas</p>
-                </div>
-                <div class="stat-item" data-count="99">
-                    <h3>0%</h3>
-                    <p>Precisión en Análisis</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    
     <!-- Features Section -->
     <section class="features" id="servicios">
         <div class="container">
-            <h2 class="section-title">¿Por Qué Somos Líderes en GIS?</h2>
-            <p class="section-subtitle">Combinamos experiencia técnica, tecnología de vanguardia y metodologías probadas para entregar resultados excepcionales</p>
+            <h2 class="section-title">¿Por Qué Elegirnos?</h2>
+            <p class="section-subtitle">Combinamos experiencia con ArcGIS, metodologías claras y buenas prácticas para entregar entregables listos para usar</p>
             
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-brain"></i>
+                        <i class="fas fa-desktop"></i>
                     </div>
-                    <h3>Inteligencia Artificial Aplicada</h3>
-                    <p>Utilizamos algoritmos de machine learning y modelos predictivos para extraer insights valiosos de tus datos geoespaciales, optimizando la toma de decisiones estratégicas.</p>
+                    <h3>Experiencia con ArcGIS</h3>
+                    <p>Proyectos desarrollados con ArcGIS Pro y ArcGIS Online, automatizaciones con Python/ArcPy y capacidad para integrar diversas fuentes de datos territoriales.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-satellite"></i>
+                        <i class="fas fa-file-contract"></i>
                     </div>
-                    <h3>Teledetección Avanzada</h3>
-                    <p>Procesamiento de imágenes satelitales de alta resolución, análisis multiespectrales y monitoreo en tiempo real para proyectos de gran escala.</p>
+                    <h3>Entregables Claros</h3>
+                    <p>Mapas, dashboards y reportes listos para usar. Documentación completa y formatos estándar que facilitan la adopción y el uso inmediato.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-cube"></i>
+                        <i class="fas fa-rocket"></i>
                     </div>
-                    <h3>Visualización 3D Inmersiva</h3>
-                    <p>Modelos tridimensionales interactivos, realidad aumentada y experiencias inmersivas que transforman la comprensión de datos espaciales.</p>
+                    <h3>Implementación Ágil</h3>
+                    <p>De prototipos a producción con buenas prácticas de datos. Metodología iterativa que permite validar resultados en cada etapa del proyecto.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-cloud"></i>
+                        <i class="fas fa-chalkboard-teacher"></i>
                     </div>
-                    <h3>Infraestructura en la Nube</h3>
-                    <p>Soluciones escalables con ArcGIS Enterprise, acceso global 24/7 y sincronización automática de datos entre equipos distribuidos.</p>
+                    <h3>Acompañamiento</h3>
+                    <p>Capacitación básica y transferencia de conocimiento al cierre. Tu equipo quedará preparado para usar y mantener las soluciones implementadas.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Seguridad Empresarial</h3>
-                    <p>Protocolos de seguridad de nivel militar, encriptación end-to-end y cumplimiento de estándares internacionales de protección de datos.</p>
+                    <h3>Buenas Prácticas de Datos</h3>
+                    <p>Control de accesos, respaldo periódico y permisos por rol. Estructura de datos ordenada y documentada para facilitar el mantenimiento.</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-users-cog"></i>
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Soporte Especializado</h3>
-                    <p>Equipo de expertos certificados en ArcGIS, soporte técnico 24/7 y capacitación continua para maximizar el ROI de tu inversión.</p>
+                    <h3>Estudios de Mercado Territoriales</h3>
+                    <p>Análisis de ubicación de competencia, densidad poblacional, seguridad y características del entorno para ubicar zonas estratégicas de negocio.</p>
                 </div>
             </div>
         </div>
     </section>
+    
     <!-- Visual Showcase -->
     <section class="visual-showcase">
         <div class="container">
             <h2 class="section-title">Nuestras Soluciones en Acción</h2>
-            <p class="section-subtitle">Descubre cómo transformamos datos complejos en visualizaciones poderosas e insights accionables</p>
+            <p class="section-subtitle">Descubre cómo convertimos datos territoriales en herramientas útiles para la toma de decisiones</p>
             
             <div class="showcase-grid">
                 <div class="showcase-item">
                     <img src="public/layer2.png" alt="Análisis Geoespacial Multidimensional" loading="lazy">
                     <div class="showcase-overlay">
                         <h4>Análisis Multidimensional</h4>
-                        <p>Procesamiento avanzado de múltiples capas de datos para análisis complejos</p>
+                        <p>Procesamiento de múltiples capas de datos para análisis complejos</p>
                     </div>
                 </div>
                 <div class="showcase-item">
-                    <img src="public/web.png" alt="Mapas Interactivos ArcGIS Pro" loading="lazy">
+                    <img src="public/web.png" alt="Mapas Interactivos WebGIS" loading="lazy">
                     <div class="showcase-overlay">
                         <h4>WebGIS Interactivo</h4>
-                        <p>Plataformas web personalizadas con herramientas de análisis en tiempo real</p>
+                        <p>Plataformas web accesibles con herramientas de consulta y análisis</p>
                     </div>
                 </div>
                 <div class="showcase-item">
-                    <img src="public/dashborads.jpg" alt="Business Intelligence Geoespacial" loading="lazy">
+                    <img src="public/dashborads.jpg" alt="Dashboards Ejecutivos" loading="lazy">
                     <div class="showcase-overlay">
-                        <h4>Business Intelligence</h4>
-                        <p>Dashboards ejecutivos con métricas geoespaciales para decisiones estratégicas</p>
+                        <h4>Dashboards Ejecutivos</h4>
+                        <p>Tableros con indicadores territoriales para decisiones estratégicas</p>
                     </div>
                 </div>
                 <div class="showcase-item">
-                    <img src="public/gis.png" alt="Análisis Predictivo 3D Urbano" loading="lazy">
+                    <img src="public/gis.png" alt="Análisis Territorial" loading="lazy">
                     <div class="showcase-overlay">
-                        <h4>Modelado Predictivo 3D</h4>
-                        <p>Simulaciones tridimensionales para planificación urbana y análisis de riesgos</p>
+                        <h4>Análisis Territorial</h4>
+                        <p>Estudios de idoneidad y evaluación de alternativas de ubicación</p>
                     </div>
                 </div>
                 <div class="showcase-item">
                     <img src="public/layer.png" alt="Capas de Análisis Espacial" loading="lazy">
                     <div class="showcase-overlay">
                         <h4>Análisis Multicapa</h4>
-                        <p>Superposición de datasets complejos para insights profundos</p>
+                        <p>Superposición de datasets para insights territoriales profundos</p>
                     </div>
                 </div>
                 <div class="showcase-item">
-                    <img src="public/graficos.png" alt="Aplicaciones Móviles Field Maps" loading="lazy">
+                    <img src="public/graficos.png" alt="Aplicaciones Móviles de Campo" loading="lazy">
                     <div class="showcase-overlay">
                         <h4>Soluciones Móviles</h4>
-                        <p>Aplicaciones nativas para recolección de datos en campo</p>
+                        <p>Aplicaciones para recolección y actualización de datos en campo</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    
     <!-- Products Section -->
     <section class="products" id="productos">
         <div class="container">
-            <h2 class="section-title">Portafolio Completo de Soluciones</h2>
-            <p class="section-subtitle">Desde visualizaciones básicas hasta plataformas empresariales completas, tenemos la solución perfecta para tu organización</p>
+            <h2 class="section-title">Portafolio de Soluciones</h2>
+            <p class="section-subtitle">Desde mapas básicos hasta infraestructura empresarial completa, tenemos la solución adecuada para tu necesidad</p>
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-badge">Básico</div>
@@ -1215,10 +1182,10 @@
                     <div class="product-badge">Intermedio</div>
                     <h3>Dashboards Interactivos</h3>
                     <ul>
-                        <li>ArcGIS Dashboards personalizados</li>
-                        <li>Widgets interactivos y KPIs</li>
-                        <li>Actualización en tiempo real</li>
-                        <li>Integración con bases de datos</li>
+                        <li>ArcGIS Dashboards con indicadores y filtros</li>
+                        <li>Widgets interactivos y KPIs territoriales</li>
+                        <li>Actualización según fuente de datos</li>
+                        <li>Integración con bases de datos existentes</li>
                         <li>Perfecto para monitoreo operativo</li>
                     </ul>
                 </div>
@@ -1226,19 +1193,19 @@
                     <div class="product-badge">Estándar</div>
                     <h3>WebGIS Interactivo</h3>
                     <ul>
-                        <li>Mapas web completamente funcionales</li>
-                        <li>Herramientas de análisis integradas</li>
+                        <li>Mapas web accesibles desde cualquier dispositivo</li>
+                        <li>Herramientas de consulta y análisis integradas</li>
                         <li>Interfaz responsive y personalizable</li>
-                        <li>Control de usuarios y permisos</li>
-                        <li>Acceso desde cualquier dispositivo</li>
+                        <li>Permisos por usuario y control de acceso</li>
+                        <li>Capacitación básica incluida</li>
                     </ul>
                 </div>
                 <div class="product-card">
                     <div class="product-badge">Avanzado</div>
-                    <h3>Aplicaciones Móviles GIS</h3>
+                    <h3>Aplicaciones Móviles de Campo</h3>
                     <ul>
-                        <li>Field Maps para trabajo en campo</li>
-                        <li>Survey123 para recolección de datos</li>
+                        <li>Field Maps para levantamiento de datos en campo</li>
+                        <li>Survey123 para recolección estructurada</li>
                         <li>QuickCapture para registro rápido</li>
                         <li>Sincronización offline/online</li>
                         <li>Optimizado para tablets y smartphones</li>
@@ -1246,39 +1213,40 @@
                 </div>
                 <div class="product-card">
                     <div class="product-badge">Enterprise</div>
-                    <h3>Infraestructura GIS Empresarial</h3>
+                    <h3>Infraestructura GIS</h3>
                     <ul>
-                        <li>ArcGIS Enterprise completo</li>
-                        <li>Servidor de mapas dedicado</li>
+                        <li>Configuración de ArcGIS Enterprise</li>
+                        <li>Servidor de mapas y bases de datos geoespaciales</li>
                         <li>Gestión avanzada de geodatabases</li>
-                        <li>Integración con sistemas ERP/CRM</li>
-                        <li>Arquitectura escalable y segura</li>
+                        <li>Integración con sistemas existentes</li>
+                        <li>Arquitectura escalable y documentada</li>
                     </ul>
                 </div>
                 <div class="product-card">
-                    <div class="product-badge">Premium</div>
-                    <h3>Plataforma Personalizada</h3>
+                    <div class="product-badge">A Demanda</div>
+                    <h3>Análisis Avanzado</h3>
                     <ul>
-                        <li>Desarrollo completamente a medida</li>
-                        <li>APIs y microservicios personalizados</li>
-                        <li>Visualización 3D y realidad aumentada</li>
-                        <li>Machine Learning integrado</li>
-                        <li>Solución integral end-to-end</li>
+                        <li>Modelos espaciales específicos (idoneidad territorial)</li>
+                        <li>Estudios de mercado territoriales detallados</li>
+                        <li>Teledetección con Sentinel/Landsat (según proyecto)</li>
+                        <li>Visualización 3D (cuando datos lo justifican)</li>
+                        <li>Solución completamente personalizada</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
+    
     <!-- Technologies Section -->
     <section class="technologies" id="tecnologias">
         <div class="container">
-            <h2 class="section-title">Tecnologías de Vanguardia</h2>
-            <p class="section-subtitle">Utilizamos las herramientas más avanzadas del mercado para garantizar soluciones robustas y escalables</p>
+            <h2 class="section-title">Tecnología Comprobada</h2>
+            <p class="section-subtitle">Utilizamos herramientas ampliamente utilizadas en la industria para garantizar soluciones estables y escalables</p>
             
             <div class="tech-grid">
                 <div class="tech-content">
-                    <h3>Stack Tecnológico Completo</h3>
-                    <p>Nuestro expertise abarca desde herramientas de escritorio hasta soluciones en la nube, integrando lo mejor de cada tecnología para crear soluciones híbridas poderosas.</p>
+                    <h3>Stack Tecnológico Principal</h3>
+                    <p>Nuestro expertise se centra en ArcGIS y tecnologías complementarias probadas, integrando lo mejor de cada herramienta para crear soluciones efectivas y mantenibles.</p>
                     
                     <div class="tech-list">
                         <div class="tech-item">
@@ -1287,7 +1255,7 @@
                             </div>
                             <div>
                                 <strong>ArcGIS Pro</strong><br>
-                                <small>Análisis avanzado</small>
+                                <small>Análisis espacial avanzado</small>
                             </div>
                         </div>
                         
@@ -1307,7 +1275,7 @@
                             </div>
                             <div>
                                 <strong>Python & ArcPy</strong><br>
-                                <small>Automatización</small>
+                                <small>Automatización de procesos</small>
                             </div>
                         </div>
                         
@@ -1316,7 +1284,7 @@
                                 <i class="fas fa-code"></i>
                             </div>
                             <div>
-                                <strong>JavaScript APIs</strong><br>
+                                <strong>ArcGIS API for JavaScript</strong><br>
                                 <small>Desarrollo web</small>
                             </div>
                         </div>
@@ -1327,7 +1295,7 @@
                             </div>
                             <div>
                                 <strong>Sentinel & Landsat</strong><br>
-                                <small>Imágenes satelitales</small>
+                                <small>Imágenes satelitales (opcional)</small>
                             </div>
                         </div>
                         
@@ -1337,87 +1305,65 @@
                             </div>
                             <div>
                                 <strong>Power BI & Tableau</strong><br>
-                                <small>Business Intelligence</small>
+                                <small>Business Intelligence (opcional)</small>
                             </div>
                         </div>
                     </div>
                     
                     <a href="#contacto" class="btn-primary" data-modal="true">
-                        <i class="fas fa-cogs"></i> Conocer Más Tecnologías
+                        <i class="fas fa-cogs"></i> Conocer Más Detalles
                     </a>
                 </div>
                 
                 <div class="tech-image">
-                    <img src="public/elevacion.jpg" alt="ArcGIS Pro - Análisis de Suitabilidad en California" loading="lazy">
+                    <img src="public/elevacion.jpg" alt="ArcGIS Pro - Análisis Territorial" loading="lazy">
                 </div>
             </div>
         </div>
     </section>
+    
     <!-- Industries Section -->
     <section class="industries" id="industrias">
         <div class="container">
-            <h2 class="section-title">Industrias que Transformamos</h2>
+            <h2 class="section-title">Sectores que Atendemos</h2>
             <p class="section-subtitle">Experiencia comprobada en sectores estratégicos con soluciones especializadas que generan valor real</p>
             <div class="industries-grid">
-                <div class="industry-card">
-                    <h4><i class="fas fa-building"></i> Arquitectura y Construcción</h4>
-                    <p>Gestión de infraestructura, análisis de impacto ambiental, modelado 3D y seguimiento de obras en tiempo real</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-store"></i> Retail y Comercio</h4>
-                    <p>Selección óptima de sitios, análisis de mercado, optimización logística y estudios de comportamiento del consumidor</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-leaf"></i> Recursos Naturales</h4>
-                    <p>Monitoreo forestal, gestión de cuencas hidrográficas, mapeo de biodiversidad y análisis de cambio climático</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-bolt"></i> Energía y Utilities</h4>
-                    <p>Gestión de redes eléctricas, sitios para energías renovables, análisis de riesgos en ductos y infraestructura crítica</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-heartbeat"></i> Salud Pública</h4>
-                    <p>Mapeo de accesibilidad a servicios, epidemiología espacial, planificación hospitalaria y análisis de cobertura</p>
-                </div>
                 <div class="industry-card">
                     <h4><i class="fas fa-landmark"></i> Gobierno y Sector Público</h4>
                     <p>Catastro digital, planificación urbana, gestión de servicios públicos y transparencia gubernamental</p>
                 </div>
                 <div class="industry-card">
-                    <h4><i class="fas fa-truck"></i> Transporte y Logística</h4>
-                    <p>Optimización de rutas, análisis de tráfico, gestión de flotas y planificación de infraestructura vial</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-shield-alt"></i> Seguridad y Emergencias</h4>
-                    <p>Mapeo de riesgos, respuesta a desastres, planificación de evacuaciones y análisis de criminalidad</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-signal"></i> Telecomunicaciones</h4>
-                    <p>Análisis de cobertura, planificación de torres, optimización de redes y estudios de demanda</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-tint"></i> Gestión Hídrica</h4>
-                    <p>Monitoreo de recursos hídricos, modelado de inundaciones, calidad del agua y gestión de sequías</p>
+                    <h4><i class="fas fa-city"></i> Planeación Urbana</h4>
+                    <p>Estudios de crecimiento urbano, zonificación, análisis de densidad y planificación de infraestructura</p>
                 </div>
                 <div class="industry-card">
                     <h4><i class="fas fa-vote-yea"></i> Procesos Electorales</h4>
                     <p>Análisis electoral territorial, logística de votación, mapeo de tendencias y participación ciudadana</p>
                 </div>
                 <div class="industry-card">
-                    <h4><i class="fas fa-industry"></i> Minería y Petróleo</h4>
-                    <p>Exploración geológica, monitoreo ambiental, análisis de concesiones y gestión de impactos</p>
+                    <h4><i class="fas fa-truck"></i> Transporte y Logística</h4>
+                    <p>Optimización de rutas, análisis de tráfico, gestión de flotas y planificación de infraestructura vial</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-leaf"></i> Medio Ambiente</h4>
+                    <p>Monitoreo ambiental, gestión de recursos naturales, análisis de cambio climático y evaluación de impactos</p>
+                </div>
+                <div class="industry-card">
+                    <h4><i class="fas fa-store"></i> Estudios de Mercado Territoriales</h4>
+                    <p>Análisis de ubicación de competencia, densidad poblacional, seguridad y características del entorno para decisiones comerciales estratégicas</p>
                 </div>
             </div>
         </div>
     </section>
+    
     <!-- CTA Section -->
     <section class="cta-section" id="contacto">
         <div class="cta-content">
-            <h2>¿Listo para Revolucionar Tu Organización?</h2>
-            <p>Únete a las empresas líderes que ya utilizan nuestras soluciones GIS para tomar decisiones más inteligentes, optimizar recursos y acelerar el crecimiento.</p>
+            <h2>¿Tienes un reto territorial?</h2>
+            <p>Agendemos una consulta gratuita para entender tu necesidad y proponerte un alcance y entregables concretos.</p>
             <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
                 <a href="mailto:info@geogis.solutions" class="btn-primary">
-                    <i class="fas fa-envelope"></i> Solicitar Demo
+                    <i class="fas fa-envelope"></i> Solicitar Consulta
                 </a>
                 <a href="tel:+523334028621" class="btn-secondary">
                     <i class="fas fa-phone"></i> Llamar Ahora
@@ -1428,36 +1374,35 @@
             </div>
         </div>
     </section>
+    
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4><i class="fas fa-globe-americas"></i> GeoGIS Solutions</h4>
-                    <p>Líderes en soluciones geoespaciales para industrias estratégicas. Transformamos datos complejos en inteligencia accionable que impulsa el crecimiento y la innovación.</p>
+                    <h4><img src="public/logo.png" alt="GeoGIS Solutions" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 0.5rem;"> GeoGIS Solutions</h4>
+                    <p>Especialistas en soluciones geoespaciales para decisiones estratégicas. Convertimos datos territoriales en herramientas útiles que impulsan el crecimiento y la innovación.</p>
                     <div class="social-links">
                         <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                         <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
                     <h4>Soluciones Principales</h4>
-                    <p><a href="#productos">Mapas Interactivos</a></p>
-                    <p><a href="#productos">Dashboards Ejecutivos</a></p>
+                    <p><a href="#productos">Mapas e Informes</a></p>
+                    <p><a href="#productos">Dashboards Interactivos</a></p>
+                    <p><a href="#productos">WebGIS</a></p>
                     <p><a href="#productos">Aplicaciones Móviles</a></p>
-                    <p><a href="#productos">Análisis Predictivo</a></p>
-                    <p><a href="#productos">Infraestructura Enterprise</a></p>
+                    <p><a href="#productos">Infraestructura GIS</a></p>
                 </div>
                 <div class="footer-section">
-                    <h4>Industrias Especializadas</h4>
+                    <h4>Sectores Especializados</h4>
                     <p><a href="#industrias">Gobierno y Sector Público</a></p>
-                    <p><a href="#industrias">Energía y Utilities</a></p>
-                    <p><a href="#industrias">Recursos Naturales</a></p>
+                    <p><a href="#industrias">Planeación Urbana</a></p>
+                    <p><a href="#industrias">Procesos Electorales</a></p>
                     <p><a href="#industrias">Transporte y Logística</a></p>
-                    <p><a href="#industrias">Telecomunicaciones</a></p>
+                    <p><a href="#industrias">Estudios de Mercado</a></p>
                 </div>
                 <div class="footer-section">
                     <h4>Contacto Directo</h4>
@@ -1483,7 +1428,7 @@
             <div class="whatsapp-header">
                 <button class="whatsapp-close" onclick="closeWhatsAppChat()">&times;</button>
                 <div class="whatsapp-avatar">
-                    <i class="fas fa-globe-americas"></i>
+                    <img src="public/logo.png" alt="GeoGIS" style="width: 24px; height: 24px; border-radius: 50%;">
                 </div>
                 <div class="whatsapp-info">
                     <h4>GeoGIS Solutions</h4>
@@ -1500,15 +1445,15 @@
                 <div class="whatsapp-options">
                     <a href="https://wa.me/523334028621?text=Hola%2C%20me%20interesa%20conocer%20sus%20soluciones%20GIS%20para%20mi%20empresa" class="whatsapp-option">
                         <i class="fas fa-building"></i>
-                        Soluciones para empresas
+                        Soluciones para mi organización
                     </a>
-                    <a href="https://wa.me/523334028621?text=Necesito%20una%20consulta%20gratuita%20sobre%20an%C3%A1lisis%20geoespacial" class="whatsapp-option">
+                    <a href="https://wa.me/523334028621?text=Necesito%20una%20consulta%20gratuita%20sobre%20an%C3%A1lisis%20territorial" class="whatsapp-option">
                         <i class="fas fa-comments"></i>
                         Consulta gratuita
                     </a>
-                    <a href="https://wa.me/523334028621?text=Me%20interesa%20ver%20una%20demo%20de%20sus%20productos%20GIS" class="whatsapp-option">
-                        <i class="fas fa-play-circle"></i>
-                        Ver demo en vivo
+                    <a href="https://wa.me/523334028621?text=Me%20interesa%20un%20estudio%20de%20mercado%20territorial" class="whatsapp-option">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Estudio de mercado territorial
                     </a>
                     <a href="https://wa.me/523334028621?text=Tengo%20un%20proyecto%20espec%C3%ADfico%20que%20requiere%20an%C3%A1lisis%20geoespacial" class="whatsapp-option">
                         <i class="fas fa-project-diagram"></i>
@@ -1530,7 +1475,7 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeContactModal()">&times;</button>
             <h3 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">
-                <i class="fas fa-rocket"></i> Consulta Gratuita Personalizada
+                <i class="fas fa-map"></i> Consulta Gratuita Personalizada
             </h3>
             <form class="modal-form" id="contactForm">
                 <input type="text" name="name" placeholder="Nombre completo *" required>
@@ -1539,17 +1484,13 @@
                 <input type="text" name="company" placeholder="Empresa u organización">
                 
                 <select name="industry">
-                    <option value="">Selecciona tu industria</option>
+                    <option value="">Selecciona tu sector</option>
                     <option value="gobierno">Gobierno y Sector Público</option>
-                    <option value="energia">Energía y Utilities</option>
-                    <option value="construccion">Construcción e Infraestructura</option>
-                    <option value="recursos">Recursos Naturales</option>
-                    <option value="telecomunicaciones">Telecomunicaciones</option>
-                    <option value="transporte">Transporte y Logística</option>
-                    <option value="salud">Salud Pública</option>
-                    <option value="retail">Retail y Comercio</option>
-                    <option value="mineria">Minería y Petróleo</option>
+                    <option value="planeacion">Planeación Urbana</option>
                     <option value="electoral">Procesos Electorales</option>
+                    <option value="transporte">Transporte y Logística</option>
+                    <option value="ambiente">Medio Ambiente</option>
+                    <option value="mercado">Estudios de Mercado Territoriales</option>
                     <option value="otro">Otro</option>
                 </select>
                 
@@ -1559,13 +1500,13 @@
                     <option value="dashboards">Dashboards Interactivos</option>
                     <option value="webgis">WebGIS Interactivo</option>
                     <option value="movil">Aplicaciones Móviles</option>
-                    <option value="enterprise">Infraestructura Enterprise</option>
-                    <option value="personalizada">Plataforma Personalizada</option>
-                    <option value="consultoria">Consultoría y Análisis</option>
+                    <option value="enterprise">Infraestructura GIS</option>
+                    <option value="analisis">Análisis Avanzado</option>
+                    <option value="mercado_territorial">Estudio de Mercado Territorial</option>
                     <option value="no_seguro">No estoy seguro</option>
                 </select>
                 
-                <textarea name="message" placeholder="Describe tu proyecto, necesidades específicas o desafíos que enfrentas..."></textarea>
+                <textarea name="message" placeholder="Describe tu reto territorial, necesidades específicas o desafíos que enfrentas..."></textarea>
                 
                 <button type="submit" class="modal-submit">
                     <i class="fas fa-paper-plane"></i> Enviar Consulta
@@ -1581,7 +1522,7 @@
                     <a href="tel:+523334028621" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-phone"></i> +52 33 4028 6621
                     </a>
-                    <a href="https://wa.me/523334028621" style="color: var(--secondary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <a href="https://wa.me/523334028621" style="color: var(--success); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
                 </div>
@@ -1722,37 +1663,6 @@
             });
         }
         
-        // Animated Counters
-        function animateCounter(element, target, duration = 2000) {
-            let start = 0;
-            const increment = target / (duration / 16);
-            const timer = setInterval(() => {
-                start += increment;
-                const current = Math.floor(start);
-                element.textContent = current + (target === 99 ? '%' : '+');
-                if (start >= target) {
-                    element.textContent = target + (target === 99 ? '%' : '+');
-                    clearInterval(timer);
-                }
-            }, 16);
-        }
-        
-        function initCounters() {
-            const statsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const h3 = entry.target.querySelector('h3');
-                        const targetValue = parseInt(entry.target.dataset.count);
-                        animateCounter(h3, targetValue);
-                        statsObserver.unobserve(entry.target);
-                    }
-                });
-            });
-            document.querySelectorAll('.stat-item').forEach(item => {
-                statsObserver.observe(item);
-            });
-        }
-        
         // Image Lazy Loading
         function initLazyLoading() {
             const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -1816,7 +1726,7 @@
                 // Simulate API call
                 setTimeout(() => {
                     submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado! Te contactaremos pronto';
-                    submitBtn.style.background = 'var(--secondary)';
+                    submitBtn.style.background = 'var(--success)';
                     
                     // Log form data (replace with actual API call)
                     console.log('Form Data:', data);
@@ -1826,7 +1736,7 @@
                         contactForm.reset();
                         submitBtn.innerHTML = originalText;
                         submitBtn.disabled = false;
-                        submitBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--purple))';
+                        submitBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--accent))';
                         
                         // Show success message
                         showNotification('¡Gracias! Hemos recibido tu consulta. Te contactaremos dentro de 24 horas.', 'success');
@@ -1842,7 +1752,7 @@
                 position: fixed;
                 top: 100px;
                 right: 20px;
-                background: ${type === 'success' ? 'var(--secondary)' : 'var(--primary)'};
+                background: ${type === 'success' ? 'var(--success)' : 'var(--primary)'};
                 color: white;
                 padding: 1rem 2rem;
                 border-radius: 10px;
@@ -1886,69 +1796,6 @@
             });
         }
         
-        // Floating Elements
-        function addFloatingElements() {
-            const hero = document.querySelector('.hero');
-            if (!hero) return;
-            
-            for (let i = 0; i < 8; i++) {
-                const float = document.createElement('div');
-                float.style.cssText = `
-                    position: absolute;
-                    width: ${4 + Math.random() * 4}px;
-                    height: ${4 + Math.random() * 4}px;
-                    background: rgba(255, 255, 255, ${0.2 + Math.random() * 0.3});
-                    border-radius: 50%;
-                    pointer-events: none;
-                    animation: floating ${8 + Math.random() * 4}s ease-in-out infinite;
-                    animation-delay: ${Math.random() * 2}s;
-                    left: ${Math.random() * 100}%;
-                    top: ${Math.random() * 100}%;
-                `;
-                hero.appendChild(float);
-            }
-        }
-        
-        // Performance Optimization
-        function preloadCriticalImages() {
-            const criticalImages = [
-                'public/compu.jpg',
-                'public/layer2.png',
-                'public/web.png'
-            ];
-            
-            criticalImages.forEach(src => {
-                const img = new Image();
-                img.src = src;
-            });
-        }
-        
-        // Keyboard Navigation
-        function initKeyboardNavigation() {
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey || e.metaKey) {
-                    switch(e.key) {
-                        case '1':
-                            e.preventDefault();
-                            document.querySelector('#inicio').scrollIntoView({ behavior: 'smooth' });
-                            break;
-                        case '2':
-                            e.preventDefault();
-                            document.querySelector('#servicios').scrollIntoView({ behavior: 'smooth' });
-                            break;
-                        case '3':
-                            e.preventDefault();
-                            document.querySelector('#productos').scrollIntoView({ behavior: 'smooth' });
-                            break;
-                        case '4':
-                            e.preventDefault();
-                            document.querySelector('#contacto').scrollIntoView({ behavior: 'smooth' });
-                            break;
-                    }
-                }
-            });
-        }
-        
         // Enhanced Hover Effects
         function initHoverEffects() {
             document.querySelectorAll('.feature-card, .product-card').forEach(card => {
@@ -1965,7 +1812,7 @@
                 item.addEventListener('mouseenter', () => {
                     const overlay = item.querySelector('.showcase-overlay');
                     if (overlay) {
-                        overlay.style.background = 'linear-gradient(transparent, rgba(37, 99, 235, 0.9))';
+                        overlay.style.background = 'linear-gradient(transparent, rgba(79, 70, 229, 0.9))';
                     }
                 });
                 
@@ -1975,14 +1822,6 @@
                         overlay.style.background = 'linear-gradient(transparent, rgba(0, 0, 0, 0.8))';
                     }
                 });
-            });
-        }
-        
-        // Tech Item Staggered Animation
-        function initTechAnimation() {
-            document.querySelectorAll('.tech-item').forEach((item, index) => {
-                item.style.animationDelay = `${index * 0.1}s`;
-                item.classList.add('fade-in');
             });
         }
         
@@ -2039,44 +1878,12 @@
             return emailRegex.test(email);
         }
         
-        // Easter Egg - Konami Code
-        function initEasterEgg() {
-            let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
-            let userInput = [];
-            
-            document.addEventListener('keydown', (e) => {
-                userInput.push(e.code);
-                userInput = userInput.slice(-konamiCode.length);
-                
-                if (JSON.stringify(userInput) === JSON.stringify(konamiCode)) {
-                    showNotification('🎉 ¡Código Konami activado! Eres un verdadero geek GIS 🗺️', 'success');
-                    // Add special effect
-                    document.body.style.animation = 'rainbow 2s infinite';
-                    setTimeout(() => {
-                        document.body.style.animation = '';
-                    }, 3000);
-                }
-            });
-        }
-        
-        // Rainbow animation for easter egg
-        const rainbowCSS = `
-            @keyframes rainbow {
-                0% { filter: hue-rotate(0deg); }
-                100% { filter: hue-rotate(360deg); }
-            }
-        `;
-        const style = document.createElement('style');
-        style.textContent = rainbowCSS;
-        document.head.appendChild(style);
-        
         // Initialize Everything
         document.addEventListener('DOMContentLoaded', () => {
             // Core functionality
             initSmoothScrolling();
             initMobileMenu();
             initAnimations();
-            initCounters();
             initLazyLoading();
             initContactModal();
             initScrollEvents();
@@ -2086,39 +1893,15 @@
             // Enhanced features
             initParallax();
             initHoverEffects();
-            initTechAnimation();
-            initKeyboardNavigation();
-            initEasterEgg();
-            
-            // Performance
-            preloadCriticalImages();
-            addFloatingElements();
             
             // Console message
             console.log('🗺️ GeoGIS Solutions - Landing Page Loaded Successfully!');
-            console.log('💡 Tips:');
-            console.log('- Use Ctrl+1, Ctrl+2, Ctrl+3, Ctrl+4 for quick navigation');
-            console.log('- Try the Konami Code for a surprise! ↑↑↓↓←→←→BA');
-            console.log('- All animations are optimized with requestAnimationFrame');
             
             // Load complete notification
             setTimeout(() => {
                 showNotification('¡Bienvenido a GeoGIS Solutions! 🌍', 'info');
             }, 1000);
         });
-        
-        // Service Worker Registration (optional for PWA)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
         
         // Error handling
         window.addEventListener('error', (e) => {
