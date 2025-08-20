@@ -9,1028 +9,205 @@
     <link rel="icon" type="image/png" href="public/favicon.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            /* Colores basados en el favicon */
-            --primary: #4f46e5; /* Azul principal */
-            --primary-dark: #3730a3; /* Azul oscuro */
-            --secondary: #0891b2; /* Celeste/cyan */
-            --accent: #7c3aed; /* Púrpura */
-            --success: #059669; /* Verde para checks */
-            --dark: #1e293b;
-            --gray: #64748b;
-            --light: #f8fafc;
-            --white: #ffffff;
-            --whatsapp: #25d366;
-        }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            scroll-behavior: smooth;
-        }
-        
-        /* Scroll Progress Indicator */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
-            z-index: 10001;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-        
-        /* WhatsApp Widget */
-        .whatsapp-widget {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9999;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        .whatsapp-button {
-            width: 60px;
-            height: 60px;
-            background: var(--whatsapp);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.8rem;
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease;
-            animation: pulse 2s infinite;
-        }
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.6);
-        }
-        .whatsapp-chat {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            width: 320px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            transform: translateY(20px) scale(0.8);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        .whatsapp-chat.active {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-            visibility: visible;
-        }
-        .whatsapp-header {
-            background: var(--whatsapp);
-            color: white;
-            padding: 1rem;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            position: relative;
-        }
-        .whatsapp-avatar {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-        .whatsapp-info h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        .whatsapp-status {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #4ade80;
-            border-radius: 50%;
-            animation: blink 1.5s infinite;
-        }
-        .whatsapp-body {
-            padding: 1.5rem;
-        }
-        .whatsapp-message {
-            background: #f3f4f6;
-            padding: 0.75rem 1rem;
-            border-radius: 0 15px 15px 15px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            position: relative;
-        }
-        .whatsapp-message::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -8px;
-            width: 0;
-            height: 0;
-            border-top: 8px solid #f3f4f6;
-            border-left: 8px solid transparent;
-        }
-        .whatsapp-options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .whatsapp-option {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 0.75rem;
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--dark);
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .whatsapp-option:hover {
-            background: var(--whatsapp);
-            color: white;
-            transform: translateX(5px);
-        }
-        .whatsapp-footer {
-            padding: 0.75rem 1.5rem;
-            border-top: 1px solid #e2e8f0;
-            text-align: center;
-        }
-        .whatsapp-footer a {
-            background: var(--whatsapp);
-            color: white;
-            padding: 0.6rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        .whatsapp-footer a:hover {
-            background: #128c7e;
-            transform: translateY(-2px);
-        }
-        .whatsapp-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
-        }
-        .whatsapp-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Responsive adjustments for WhatsApp widget */
-        @media (max-width: 768px) {
-            .whatsapp-widget {
-                bottom: 20px;
-                right: 20px;
-            }
-            .whatsapp-button {
-                width: 55px;
-                height: 55px;
-                font-size: 1.6rem;
-            }
-            .whatsapp-chat {
-                width: 280px;
-                bottom: 75px;
-                right: -10px;
-            }
-        }
-        @media (max-width: 480px) {
-            .whatsapp-chat {
-                width: 260px;
-                right: -20px;
-            }
-            .whatsapp-widget {
-                bottom: 15px;
-                right: 15px;
-            }
-        }
-        
-        /* Animations */
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            }
-            50% {
-                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6), 0 0 0 10px rgba(37, 211, 102, 0.1);
-            }
-            100% {
-                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-            }
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-        .logo img {
-            height: 40px;
-            width: auto;
-        }
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-        }
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        .cta-btn {
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .cta-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
-        }
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--secondary) 100%);
-            color: white;
-            padding: 8rem 2rem 6rem;
-            position: relative;
-            overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            animation: float 20s linear infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px) translateX(0px); }
-            33% { transform: translateY(-10px) translateX(10px); }
-            66% { transform: translateY(10px) translateX(-5px); }
-            100% { transform: translateY(0px) translateX(0px); }
-        }
-        .hero-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-        .hero-content {
-            order: 1;
-        }
-        .hero-image {
-            order: 2;
-            text-align: center;
-        }
-        .hero-image img {
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-            transition: transform 0.3s ease;
-        }
-        .hero-image img:hover {
-            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.02);
-        }
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #fff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-        }
-        .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
-        .btn-primary {
-            background: white;
-            color: var(--primary);
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            padding: 1rem 2rem;
-            border: 2px solid white;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-        .btn-secondary:hover {
-            background: white;
-            color: var(--primary);
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.1rem;
-            color: var(--gray);
-            max-width: 600px;
-            margin: 0 auto 4rem;
-        }
-        
-        /* Features Section */
-        .features {
-            padding: 6rem 0;
-            background: var(--light);
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-        .feature-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
-        }
-        .feature-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            color: white;
-        }
-        .feature-card h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-        .feature-card p {
-            color: var(--gray);
-            line-height: 1.6;
-        }
-        
-        /* Visual Showcase */
-        .visual-showcase {
-            padding: 6rem 0;
-            background: var(--dark);
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .showcase-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        .showcase-item {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .showcase-item:hover {
-            transform: translateY(-10px);
-        }
-        .showcase-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .showcase-item:hover img {
-            transform: scale(1.1);
-        }
-        .showcase-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-            padding: 2rem;
-            color: white;
-        }
-        .showcase-item h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        .showcase-item p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        /* Products Section */
-        .products {
-            padding: 6rem 0;
-            background: white;
-        }
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        .product-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-radius: 20px;
-            padding: 2.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(79, 70, 229, 0.1);
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(79, 70, 229, 0.15);
-        }
-        .product-badge {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .product-card h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-        .product-card ul {
-            list-style: none;
-            margin-bottom: 1.5rem;
-        }
-        .product-card li {
-            color: var(--gray);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-        }
-        .product-card li::before {
-            content: '✓';
-            color: var(--success);
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        /* Technologies Section */
-        .technologies {
-            padding: 6rem 0;
-            background: linear-gradient(135deg, var(--light) 0%, white 100%);
-        }
-        .tech-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            margin-top: 3rem;
-        }
-        .tech-content h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-        .tech-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .tech-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: all 0.3s ease;
-        }
-        .tech-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-        }
-        .tech-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-        .tech-image {
-            text-align: center;
-        }
-        .tech-image img {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Industries Section */
-        .industries {
-            padding: 6rem 0;
-            background: var(--dark);
-            color: white;
-            position: relative;
-        }
-        .industries::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></svg>') repeat;
-        }
-        .industries-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-            position: relative;
-            z-index: 2;
-        }
-        .industry-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .industry-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-5px);
-        }
-        .industry-card h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .industry-card p {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
-        
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(135deg, var(--success), var(--secondary));
-            color: white;
-            padding: 6rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>') repeat;
-            animation: float 30s linear infinite;
-        }
-        .cta-content {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        .cta-section h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        .cta-section p {
-            font-size: 1.3rem;
-            margin-bottom: 2.5rem;
-            opacity: 0.9;
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 4rem 0 2rem;
-        }
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-        .footer-section h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--secondary);
-        }
-        .footer-section p, .footer-section a {
-            color: #cbd5e1;
-            text-decoration: none;
-            line-height: 1.8;
-            transition: color 0.3s ease;
-        }
-        .footer-section a:hover {
-            color: white;
-        }
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-        .footer-bottom {
-            border-top: 1px solid #334155;
-            padding-top: 2rem;
-            text-align: center;
-            color: #94a3b8;
-        }
-        
-        /* Contact Modal */
-        .contact-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-        .modal-form input,
-        .modal-form select,
-        .modal-form textarea {
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s ease;
-        }
-        .modal-form input:focus,
-        .modal-form select:focus,
-        .modal-form textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        .modal-form textarea {
-            height: 120px;
-            resize: vertical;
-        }
-        .modal-submit {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        .modal-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                z-index: 1000;
-            }
-            .nav-links.active {
-                display: flex;
-            }
-            .mobile-toggle {
-                display: block;
-            }
-            .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .hero-content {
-                order: 2;
-            }
-            .hero-image {
-                order: 1;
-                margin-bottom: 2rem;
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .hero-buttons {
-                justify-content: center;
-            }
-            .tech-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .tech-list {
-                grid-template-columns: 1fr;
-            }
-            .features-grid,
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-            .industries-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-            .cta-section h2 {
-                font-size: 2rem;
-            }
-            .cta-section p {
-                font-size: 1.1rem;
-            }
-        }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        /* Loading states */
-        img {
-            transition: opacity 0.3s ease;
-        }
-        img[loading="lazy"] {
-            opacity: 0;
-        }
-        img[loading="lazy"].loaded {
-            opacity: 1;
-        }
-        
-        /* Utility classes */
-        .text-center { text-align: center; }
-        .mb-1 { margin-bottom: 0.25rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-3 { margin-bottom: 1rem; }
-        .mb-4 { margin-bottom: 1.5rem; }
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        .mt-3 { margin-top: 1rem; }
-        .mt-4 { margin-top: 1.5rem; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root{
+            --primary:#4f46e5; --primary-dark:#3730a3; --secondary:#0891b2; --accent:#7c3aed;
+            --success:#059669; --dark:#1e293b; --gray:#64748b; --light:#f8fafc; --white:#ffffff; --whatsapp:#25d366;
+        }
+        body{ font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; line-height:1.6; color:var(--dark); scroll-behavior:smooth; }
 
-        /* Particles.js (no intrusivo) */
-        #particles-js {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* debajo del contenido (.hero-container z-index:2) */
-            pointer-events: none; /* no bloquear clics */
+        /* Scroll Progress */
+        .scroll-progress{ position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,var(--primary),var(--accent),var(--secondary)); z-index:10001; transition:width .3s ease; width:0%; }
+
+        /* WhatsApp Widget */
+        .whatsapp-widget{ position:fixed; bottom:30px; right:30px; z-index:9999; cursor:pointer; transition:all .3s cubic-bezier(.68,-.55,.265,1.55); }
+        .whatsapp-button{ width:60px; height:60px; background:var(--whatsapp); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.8rem; box-shadow:0 8px 25px rgba(37,211,102,.4); transition:all .3s ease; animation:pulse 2s infinite; }
+        .whatsapp-button:hover{ transform:scale(1.1); box-shadow:0 12px 35px rgba(37,211,102,.6); }
+        .whatsapp-chat{ position:absolute; bottom:80px; right:0; width:320px; background:#fff; border-radius:15px; box-shadow:0 15px 40px rgba(0,0,0,.15); transform:translateY(20px) scale(.8); opacity:0; visibility:hidden; transition:all .3s cubic-bezier(.68,-.55,.265,1.55); }
+        .whatsapp-chat.active{ transform:translateY(0) scale(1); opacity:1; visibility:visible; }
+        .whatsapp-header{ background:var(--whatsapp); color:#fff; padding:1rem; border-radius:15px 15px 0 0; display:flex; align-items:center; gap:.75rem; position:relative; }
+        .whatsapp-avatar{ width:40px; height:40px; background:rgba(255,255,255,.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+        .whatsapp-info h4{ font-size:1rem; font-weight:600; margin-bottom:.25rem; }
+        .whatsapp-status{ font-size:.8rem; opacity:.9; display:flex; align-items:center; gap:.3rem; }
+        .status-dot{ width:8px; height:8px; background:#4ade80; border-radius:50%; animation:blink 1.5s infinite; }
+        .whatsapp-body{ padding:1.5rem; }
+        .whatsapp-message{ background:#f3f4f6; padding:.75rem 1rem; border-radius:0 15px 15px 15px; margin-bottom:1rem; font-size:.9rem; line-height:1.4; position:relative; }
+        .whatsapp-message::before{ content:''; position:absolute; top:0; left:-8px; width:0; height:0; border-top:8px solid #f3f4f6; border-left:8px solid transparent; }
+        .whatsapp-options{ display:flex; flex-direction:column; gap:.5rem; }
+        .whatsapp-option{ background:#f8fafc; border:1px solid #e2e8f0; padding:.75rem; border-radius:8px; text-decoration:none; color:var(--dark); font-size:.85rem; transition:all .2s ease; display:flex; align-items:center; gap:.5rem; }
+        .whatsapp-option:hover{ background:var(--whatsapp); color:#fff; transform:translateX(5px); }
+        .whatsapp-footer{ padding:.75rem 1.5rem; border-top:1px solid #e2e8f0; text-align:center; }
+        .whatsapp-footer a{ background:var(--whatsapp); color:#fff; padding:.6rem 1.5rem; border-radius:25px; text-decoration:none; font-size:.9rem; font-weight:600; display:inline-flex; align-items:center; gap:.5rem; transition:all .3s ease; }
+        .whatsapp-footer a:hover{ background:#128c7e; transform:translateY(-2px); }
+        .whatsapp-close{ position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,.2); border:none; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.8rem; transition:all .2s ease; }
+        .whatsapp-close:hover{ background:rgba(255,255,255,.3); }
+        @media (max-width:768px){ .whatsapp-widget{ bottom:20px; right:20px; } .whatsapp-button{ width:55px; height:55px; font-size:1.6rem; } .whatsapp-chat{ width:280px; bottom:75px; right:-10px; } }
+        @media (max-width:480px){ .whatsapp-chat{ width:260px; right:-20px; } .whatsapp-widget{ bottom:15px; right:15px; } }
+        @keyframes pulse{0%{box-shadow:0 8px 25px rgba(37,211,102,.4)}50%{box-shadow:0 8px 25px rgba(37,211,102,.6),0 0 0 10px rgba(37,211,102,.1)}100%{box-shadow:0 8px 25px rgba(37,211,102,.4)}}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+
+        /* Header */
+        header{ position:fixed; top:0; width:100%; background:rgba(255,255,255,.95); backdrop-filter:blur(10px); z-index:1000; border-bottom:1px solid rgba(0,0,0,.1); transition:all .3s ease; }
+        nav{ max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; }
+        .logo{ display:flex; align-items:center; text-decoration:none; }
+        .logo img{ height:40px; width:auto; }
+        .nav-links{ display:flex; list-style:none; gap:2rem; }
+        .nav-links a{ text-decoration:none; color:var(--dark); font-weight:500; transition:color .3s ease; position:relative; }
+        .nav-links a:hover{ color:var(--primary); }
+        .nav-links a::after{ content:''; position:absolute; bottom:-5px; left:0; width:0; height:2px; background:var(--primary); transition:width .3s ease; }
+        .nav-links a:hover::after{ width:100%; }
+        .cta-btn{ background:var(--primary); color:#fff; padding:.75rem 1.5rem; border:none; border-radius:50px; text-decoration:none; font-weight:600; transition:all .3s ease; cursor:pointer; }
+        .cta-btn:hover{ background:var(--primary-dark); transform:translateY(-2px); box-shadow:0 10px 25px rgba(79,70,229,.3); }
+        .mobile-toggle{ display:none; background:none; border:none; color:var(--primary); font-size:1.5rem; cursor:pointer; }
+
+        /* Hero */
+        .hero{ background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 50%,var(--secondary) 100%); color:#fff; padding:8rem 2rem 6rem; position:relative; overflow:hidden; min-height:100vh; display:flex; align-items:center; }
+        .hero::before{ content:''; position:absolute; inset:0; background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat; animation:float 20s linear infinite; }
+        @keyframes float{0%{transform:translateY(0) translateX(0)}33%{transform:translateY(-10px) translateX(10px)}66%{transform:translateY(10px) translateX(-5px)}100%{transform:translateY(0) translateX(0)}}
+        .hero-container{ max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; position:relative; z-index:2; }
+        .hero-content{ order:1; }
+        .hero-image{ order:2; text-align:center; }
+        .hero-image img{ width:100%; max-width:600px; height:auto; border-radius:20px; box-shadow:0 25px 60px rgba(0,0,0,.3); transform:perspective(1000px) rotateY(-5deg) rotateX(5deg); transition:transform .3s ease; }
+        .hero-image img:hover{ transform:perspective(1000px) rotateY(0) rotateX(0) scale(1.02); }
+        .hero h1{ font-size:3.5rem; font-weight:800; margin-bottom:1.5rem; background:linear-gradient(45deg,#fff,#e0e7ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1.2; }
+        .hero p{ font-size:1.25rem; margin-bottom:2.5rem; opacity:.9; line-height:1.6; }
+        .hero-buttons{ display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:3rem; }
+        .btn-primary{ background:#fff; color:var(--primary); padding:1rem 2rem; border:none; border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s ease; display:inline-flex; align-items:center; gap:.5rem; }
+        .btn-secondary{ background:transparent; color:#fff; padding:1rem 2rem; border:2px solid #fff; border-radius:50px; font-weight:600; text-decoration:none; transition:all .3s ease; }
+        .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 15px 35px rgba(0,0,0,.2); }
+        .btn-secondary:hover{ background:#fff; color:var(--primary); }
+
+        /* Container & titles */
+        .container{ max-width:1200px; margin:0 auto; padding:0 2rem; }
+        .section-title{ text-align:center; font-size:2.5rem; font-weight:700; margin-bottom:1rem; color:var(--dark); }
+        .section-subtitle{ text-align:center; font-size:1.1rem; color:var(--gray); max-width:600px; margin:0 auto 4rem; }
+
+        /* Features */
+        .features{ padding:6rem 0; background:var(--light); position:relative; }
+        .features-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:2rem; }
+        .feature-card{ background:#fff; padding:2.5rem; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.1); transition:all .3s ease; border:1px solid rgba(0,0,0,.05); position:relative; overflow:hidden; }
+        .feature-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--primary),var(--accent),var(--secondary)); }
+        .feature-card:hover{ transform:translateY(-10px) scale(1.02); box-shadow:0 25px 50px rgba(0,0,0,.15); }
+        .feature-icon{ width:70px; height:70px; background:linear-gradient(135deg,var(--primary),var(--accent)); border-radius:20px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; font-size:1.8rem; color:#fff; }
+        .feature-card h3{ font-size:1.4rem; font-weight:600; margin-bottom:1rem; color:var(--dark); }
+        .feature-card p{ color:var(--gray); line-height:1.6; }
+
+        /* Visual Showcase */
+        .visual-showcase{ padding:6rem 0; background:var(--dark); color:#fff; position:relative; overflow:hidden; }
+        .showcase-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:2rem; margin-top:3rem; }
+        .showcase-item{ position:relative; border-radius:20px; overflow:hidden; transition:all .3s ease; cursor:pointer; }
+        .showcase-item:hover{ transform:translateY(-10px); }
+        .showcase-item img{ width:100%; height:250px; object-fit:cover; transition:transform .3s ease; }
+        .showcase-item:hover img{ transform:scale(1.1); }
+        .showcase-overlay{ position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,.8)); padding:2rem; color:#fff; }
+        .showcase-item h4{ font-size:1.2rem; font-weight:600; margin-bottom:.5rem; }
+        .showcase-item p{ font-size:.9rem; opacity:.9; }
+
+        /* Products */
+        .products{ padding:6rem 0; background:#fff; position:relative; }
+        .products-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:2rem; margin-top:3rem; }
+        .product-card{ background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%); border-radius:20px; padding:4rem 2.5rem 2.5rem; /* ↑ AUMENTADO para despejar el badge */ position:relative; overflow:hidden; transition:all .3s ease; border:1px solid rgba(79,70,229,.1); }
+        .product-card:hover{ transform:translateY(-5px); box-shadow:0 25px 50px rgba(79,70,229,.15); }
+        .product-badge{ position:absolute; top:1rem; right:1.5rem; background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; padding:.45rem 1rem; border-radius:20px; font-size:.82rem; font-weight:700; z-index:2; pointer-events:none; white-space:nowrap; }
+        .product-card h3{ font-size:1.4rem; font-weight:700; margin-bottom:1rem; color:var(--dark); }
+        .product-card ul{ list-style:none; margin-bottom:1.5rem; }
+        .product-card li{ color:var(--gray); margin-bottom:.5rem; display:flex; align-items:center; gap:.5rem; font-size:.95rem; }
+        .product-card li::before{ content:'✓'; color:var(--success); font-weight:bold; font-size:1.1rem; }
+
+        /* Technologies */
+        .technologies{ padding:6rem 0; background:linear-gradient(135deg,var(--light) 0%, #ffffff 100%); position:relative; }
+        .tech-grid{ display:grid; grid-template-columns:2fr 1fr; gap:4rem; align-items:center; margin-top:3rem; }
+        .tech-content h3{ font-size:2rem; font-weight:700; margin-bottom:1.5rem; color:var(--dark); }
+        .tech-list{ display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-bottom:2rem; }
+        .tech-item{ background:#fff; padding:1rem; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,.08); display:flex; align-items:center; gap:.75rem; transition:all .3s ease; }
+        .tech-item:hover{ transform:translateY(-3px); box-shadow:0 10px 25px rgba(0,0,0,.12); }
+        .tech-icon{ width:40px; height:40px; background:linear-gradient(135deg,var(--primary),var(--secondary)); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.2rem; }
+        .tech-image{ text-align:center; }
+        .tech-image img{ width:100%; max-width:400px; height:auto; border-radius:15px; box-shadow:0 20px 40px rgba(0,0,0,.1); }
+
+        /* Industries */
+        .industries{ padding:6rem 0; background:var(--dark); color:#fff; position:relative; }
+        .industries::before{ content:''; position:absolute; inset:0; background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></svg>') repeat; }
+        .industries-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin-top:3rem; position:relative; z-index:2; }
+        .industry-card{ background:rgba(255,255,255,.1); backdrop-filter:blur(10px); padding:2rem; border-radius:15px; transition:all .3s ease; border:1px solid rgba(255,255,255,.1); }
+        .industry-card:hover{ background:rgba(255,255,255,.15); transform:translateY(-5px); }
+        .industry-card h4{ font-size:1.1rem; font-weight:600; margin-bottom:.75rem; display:flex; align-items:center; gap:.75rem; }
+        .industry-card p{ font-size:.9rem; opacity:.9; line-height:1.5; }
+
+        /* CTA */
+        .cta-section{ background:linear-gradient(135deg,var(--success),var(--secondary)); color:#fff; padding:6rem 0; text-align:center; position:relative; overflow:hidden; }
+        .cta-section::before{ content:''; position:absolute; inset:0; background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>') repeat; animation:float 30s linear infinite; }
+        .cta-content{ max-width:800px; margin:0 auto; position:relative; z-index:2; }
+        .cta-section h2{ font-size:2.8rem; font-weight:700; margin-bottom:1.5rem; }
+        .cta-section p{ font-size:1.3rem; margin-bottom:2.5rem; opacity:.9; }
+
+        /* Footer */
+        footer{ background:var(--dark); color:#fff; padding:4rem 0 2rem; }
+        .footer-content{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:3rem; margin-bottom:3rem; }
+        .footer-section h4{ font-size:1.2rem; font-weight:600; margin-bottom:1.5rem; color:var(--secondary); }
+        .footer-section p,.footer-section a{ color:#cbd5e1; text-decoration:none; line-height:1.8; transition:color .3s ease; }
+        .footer-section a:hover{ color:#fff; }
+        .social-links{ display:flex; gap:1rem; margin-top:1rem; }
+        .social-links a{ width:40px; height:40px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all .3s ease; }
+        .social-links a:hover{ background:var(--primary); transform:translateY(-3px); }
+        .footer-bottom{ border-top:1px solid #334155; padding-top:2rem; text-align:center; color:#94a3b8; }
+
+        /* Contact Modal */
+        .contact-modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:10000; justify-content:center; align-items:center; }
+        .modal-content{ background:#fff; padding:3rem; border-radius:20px; max-width:500px; width:90%; position:relative; max-height:90vh; overflow-y:auto; }
+        .modal-close{ position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer; color:#666; }
+        .modal-form input,.modal-form select,.modal-form textarea{ width:100%; padding:1rem; margin-bottom:1rem; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; font-family:inherit; transition:border-color .3s ease; }
+        .modal-form input:focus,.modal-form select:focus,.modal-form textarea:focus{ outline:none; border-color:var(--primary); }
+        .modal-form textarea{ height:120px; resize:vertical; }
+        .modal-submit{ width:100%; padding:1rem; background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:1rem; transition:all .3s ease; }
+        .modal-submit:hover{ transform:translateY(-2px); box-shadow:0 10px 25px rgba(79,70,229,.3); }
+
+        /* Responsive */
+        @media (max-width:768px){
+            .nav-links{ display:none; position:absolute; top:100%; left:0; right:0; background:#fff; flex-direction:column; padding:1rem; box-shadow:0 2px 10px rgba(0,0,0,.1); z-index:1000; }
+            .nav-links.active{ display:flex; }
+            .mobile-toggle{ display:block; }
+            .hero-container{ grid-template-columns:1fr; text-align:center; }
+            .hero-content{ order:2; }
+            .hero-image{ order:1; margin-bottom:2rem; }
+            .hero h1{ font-size:2.5rem; }
+            .hero-buttons{ justify-content:center; }
+            .tech-grid{ grid-template-columns:1fr; text-align:center; }
+            .tech-list{ grid-template-columns:1fr; }
+            .features-grid,.products-grid{ grid-template-columns:1fr; }
+            .industries-grid{ grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); }
+            .cta-section h2{ font-size:2rem; }
+            .cta-section p{ font-size:1.1rem; }
         }
+        @media (max-width:480px){
+            .product-badge{ font-size:.72rem; padding:.35rem .75rem; right:1rem; }
+            .product-card{ padding-top:4.4rem; }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp{ from{opacity:0; transform:translateY(30px)} to{opacity:1; transform:translateY(0)} }
+        .fade-in{ animation:fadeInUp .6s ease-out forwards; }
+
+        img{ transition:opacity .3s ease; }
+        img[loading="lazy"]{ opacity:0; }
+        img[loading="lazy"].loaded{ opacity:1; }
+
+        .text-center{ text-align:center; } .mb-1{ margin-bottom:.25rem;} .mb-2{ margin-bottom:.5rem;} .mb-3{ margin-bottom:1rem;} .mb-4{ margin-bottom:1.5rem;} .mt-1{ margin-top:.25rem;} .mt-2{ margin-top:.5rem;} .mt-3{ margin-top:1rem;} .mt-4{ margin-top:1.5rem;}
+
+        /* Particles base */
+        #particles-js{ position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+        .particles-layer{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+
     </style>
 </head>
 <body>
-    <!-- Scroll Progress Indicator -->
+    <!-- Scroll Progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
-    
+
     <!-- Header -->
     <header id="header">
         <nav>
-            <a href="#inicio" class="logo">
-                <img src="public/logo.png" alt="GeoGIS Solutions">
-            </a>
+            <a href="#inicio" class="logo"><img src="public/logo.png" alt="GeoGIS Solutions"></a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#servicios">Servicios</a></li>
@@ -1039,143 +216,63 @@
                 <li><a href="#industrias">Industrias</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
-            <button class="mobile-toggle" id="mobileToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
             <a href="#contacto" class="cta-btn" data-modal="true">Consulta Gratis</a>
         </nav>
     </header>
-    
-    <!-- Hero Section -->
-    <section class="hero" id="inicio">
-        <!-- Contenedor de partículas (añadido) -->
-        <div id="particles-js" aria-hidden="true"></div>
 
+    <!-- Hero -->
+    <section class="hero" id="inicio">
+        <div id="particles-js" aria-hidden="true"></div>
         <div class="hero-container">
             <div class="hero-content">
                 <h1>Inteligencia geoespacial para decidir mejor</h1>
                 <p>Convertimos datos territoriales en mapas, tableros y aplicaciones que apoyan decisiones de gobierno y empresa. Trabajamos con ArcGIS y metodologías claras para entregar resultados medibles.</p>
                 <div class="hero-buttons">
-                    <a href="#productos" class="btn-primary">
-                        <i class="fas fa-map"></i> Explorar Soluciones
-                    </a>
+                    <a href="#productos" class="btn-primary"><i class="fas fa-map"></i> Explorar Soluciones</a>
                     <a href="#contacto" class="btn-secondary" data-modal="true">Consulta Gratuita</a>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="public/compu.jpg" alt="Dashboard GIS Interactivo" loading="eager">
-            </div>
+            <div class="hero-image"><img src="public/compu.jpg" alt="Dashboard GIS Interactivo" loading="eager"></div>
         </div>
     </section>
-    
-    <!-- Features Section -->
+
+    <!-- Features -->
     <section class="features" id="servicios">
         <div class="container">
             <h2 class="section-title">¿Por Qué Elegirnos?</h2>
             <p class="section-subtitle">Combinamos experiencia con ArcGIS, metodologías claras y buenas prácticas para entregar entregables listos para usar</p>
-            
             <div class="features-grid">
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-desktop"></i>
-                    </div>
-                    <h3>Experiencia con ArcGIS</h3>
-                    <p>Proyectos desarrollados con ArcGIS Pro y ArcGIS Online, automatizaciones con Python/ArcPy y capacidad para integrar diversas fuentes de datos territoriales.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-contract"></i>
-                    </div>
-                    <h3>Entregables Claros</h3>
-                    <p>Mapas, dashboards y reportes listos para usar. Documentación completa y formatos estándar que facilitan la adopción y el uso inmediato.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Implementación Ágil</h3>
-                    <p>De prototipos a producción con buenas prácticas de datos. Metodología iterativa que permite validar resultados en cada etapa del proyecto.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h3>Acompañamiento</h3>
-                    <p>Capacitación básica y transferencia de conocimiento al cierre. Tu equipo quedará preparado para usar y mantener las soluciones implementadas.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Buenas Prácticas de Datos</h3>
-                    <p>Control de accesos, respaldo periódico y permisos por rol. Estructura de datos ordenada y documentada para facilitar el mantenimiento.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Estudios de Mercado Territoriales</h3>
-                    <p>Análisis de ubicación de competencia, densidad poblacional, seguridad y características del entorno para ubicar zonas estratégicas de negocio.</p>
-                </div>
+                <div class="feature-card fade-in"><div class="feature-icon"><i class="fas fa-desktop"></i></div><h3>Experiencia con ArcGIS</h3><p>Proyectos desarrollados con ArcGIS Pro y ArcGIS Online, automatizaciones con Python/ArcPy y capacidad para integrar diversas fuentes de datos territoriales.</p></div>
+                <div class="feature-card fade-in"><div class="feature-icon"><i class="fas fa-file-contract"></i></div><h3>Entregables Claros</h3><p>Mapas, dashboards y reportes listos para usar. Documentación completa y formatos estándar que facilitan la adopción y el uso inmediato.</p></div>
+                <div class="feature-card fade-in"><div class="feature-icon"><i class="fas fa-rocket"></i></div><h3>Implementación Ágil</h3><p>De prototipos a producción con buenas prácticas de datos. Metodología iterativa que permite validar resultados en cada etapa del proyecto.</p></div>
+                <div class="feature-card fade-in"><div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div><h3>Acompañamiento</h3><p>Capacitación básica y transferencia de conocimiento al cierre. Tu equipo quedará preparado para usar y mantener las soluciones implementadas.</p></div>
+                <div class="feature-card fade-in"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>Buenas Prácticas de Datos</h3><p>Control de accesos, respaldo periódico y permisos por rol. Estructura de datos ordenada y documentada para facilitar el mantenimiento.</p></div>
+                <div class="feature-card fade-in"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h3>Estudios de Mercado Territoriales</h3><p>Análisis de ubicación de competencia, densidad poblacional, seguridad y características del entorno para ubicar zonas estratégicas de negocio.</p></div>
             </div>
         </div>
     </section>
-    
+
     <!-- Visual Showcase -->
     <section class="visual-showcase">
+        <div class="particles-layer" id="particles-visual"></div>
         <div class="container">
             <h2 class="section-title">Nuestras Soluciones en Acción</h2>
             <p class="section-subtitle">Descubre cómo convertimos datos territoriales en herramientas útiles para la toma de decisiones</p>
-            
             <div class="showcase-grid">
-                <div class="showcase-item">
-                    <img src="public/layer2.png" alt="Análisis Geoespacial Multidimensional" loading="lazy">
-                    <div class="showcase-overlay">
-                        <h4>Análisis Multidimensional</h4>
-                        <p>Procesamiento de múltiples capas de datos para análisis complejos</p>
-                    </div>
-                </div>
-                <div class="showcase-item">
-                    <img src="public/web.png" alt="Mapas Interactivos WebGIS" loading="lazy">
-                    <div class="showcase-overlay">
-                        <h4>WebGIS Interactivo</h4>
-                        <p>Plataformas web accesibles con herramientas de consulta y análisis</p>
-                    </div>
-                </div>
-                <div class="showcase-item">
-                    <img src="public/dashborads.jpg" alt="Dashboards Ejecutivos" loading="lazy">
-                    <div class="showcase-overlay">
-                        <h4>Dashboards Ejecutivos</h4>
-                        <p>Tableros con indicadores territoriales para decisiones estratégicas</p>
-                    </div>
-                </div>
-                <div class="showcase-item">
-                    <img src="public/gis.png" alt="Análisis Territorial" loading="lazy">
-                    <div class="showcase-overlay">
-                        <h4>Análisis Territorial</h4>
-                        <p>Estudios de idoneidad y evaluación de alternativas de ubicación</p>
-                    </div>
-                </div>
-                <div class="showcase-item">
-                    <img src="public/layer.png" alt="Capas de Análisis Espacial" loading="lazy">
-                    <div class="showcase-overlay">
-                        <h4>Análisis Multicapa</h4>
-                        <p>Superposición de datasets para insights territoriales profundos</p>
-                    </div>
-                </div>
-                <div class="showcase-item">
-                    <img src="public/graficos.png" alt="Aplicaciones Móviles de Campo" loading="lazy">
-                    <div class="showcase-overlay">
-                        <h4>Soluciones Móviles</h4>
-                        <p>Aplicaciones para recolección y actualización de datos en campo</p>
-                    </div>
-                </div>
+                <div class="showcase-item"><img src="public/layer2.png" alt="Análisis Geoespacial Multidimensional" loading="lazy"><div class="showcase-overlay"><h4>Análisis Multidimensional</h4><p>Procesamiento de múltiples capas de datos para análisis complejos</p></div></div>
+                <div class="showcase-item"><img src="public/web.png" alt="Mapas Interactivos WebGIS" loading="lazy"><div class="showcase-overlay"><h4>WebGIS Interactivo</h4><p>Plataformas web accesibles con herramientas de consulta y análisis</p></div></div>
+                <div class="showcase-item"><img src="public/dashborads.jpg" alt="Dashboards Ejecutivos" loading="lazy"><div class="showcase-overlay"><h4>Dashboards Ejecutivos</h4><p>Tableros con indicadores territoriales para decisiones estratégicas</p></div></div>
+                <div class="showcase-item"><img src="public/gis.png" alt="Análisis Territorial" loading="lazy"><div class="showcase-overlay"><h4>Análisis Territorial</h4><p>Estudios de idoneidad y evaluación de alternativas de ubicación</p></div></div>
+                <div class="showcase-item"><img src="public/layer.png" alt="Capas de Análisis Espacial" loading="lazy"><div class="showcase-overlay"><h4>Análisis Multicapa</h4><p>Superposición de datasets para insights territoriales profundos</p></div></div>
+                <div class="showcase-item"><img src="public/graficos.png" alt="Aplicaciones Móviles de Campo" loading="lazy"><div class="showcase-overlay"><h4>Soluciones Móviles</h4><p>Aplicaciones para recolección y actualización de datos en campo</p></div></div>
             </div>
         </div>
     </section>
-    
-    <!-- Products Section -->
+
+    <!-- Products -->
     <section class="products" id="productos">
+        <div class="particles-layer" id="particles-products"></div>
         <div class="container">
             <h2 class="section-title">Portafolio de Soluciones</h2>
             <p class="section-subtitle">Desde mapas básicos hasta infraestructura empresarial completa, tenemos la solución adecuada para tu necesidad</p>
@@ -1249,151 +346,68 @@
             </div>
         </div>
     </section>
-    
-    <!-- Technologies Section -->
+
+    <!-- Technologies -->
     <section class="technologies" id="tecnologias">
         <div class="container">
             <h2 class="section-title">Tecnología Comprobada</h2>
             <p class="section-subtitle">Utilizamos herramientas ampliamente utilizadas en la industria para garantizar soluciones estables y escalables</p>
-            
             <div class="tech-grid">
                 <div class="tech-content">
                     <h3>Stack Tecnológico Principal</h3>
                     <p>Nuestro expertise se centra en ArcGIS y tecnologías complementarias probadas, integrando lo mejor de cada herramienta para crear soluciones efectivas y mantenibles.</p>
-                    
                     <div class="tech-list">
-                        <div class="tech-item">
-                            <div class="tech-icon">
-                                <i class="fas fa-desktop"></i>
-                            </div>
-                            <div>
-                                <strong>ArcGIS Pro</strong><br>
-                                <small>Análisis espacial avanzado</small>
-                            </div>
-                        </div>
-                        
-                        <div class="tech-item">
-                            <div class="tech-icon">
-                                <i class="fas fa-cloud"></i>
-                            </div>
-                            <div>
-                                <strong>ArcGIS Online</strong><br>
-                                <small>Plataforma en la nube</small>
-                            </div>
-                        </div>
-                        
-                        <div class="tech-item">
-                            <div class="tech-icon">
-                                <i class="fab fa-python"></i>
-                            </div>
-                            <div>
-                                <strong>Python & ArcPy</strong><br>
-                                <small>Automatización de procesos</small>
-                            </div>
-                        </div>
-                        
-                        <div class="tech-item">
-                            <div class="tech-icon">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <div>
-                                <strong>ArcGIS API for JavaScript</strong><br>
-                                <small>Desarrollo web</small>
-                            </div>
-                        </div>
-                        
-                        <div class="tech-item">
-                            <div class="tech-icon">
-                                <i class="fas fa-satellite"></i>
-                            </div>
-                            <div>
-                                <strong>Sentinel & Landsat</strong><br>
-                                <small>Imágenes satelitales (opcional)</small>
-                            </div>
-                        </div>
-                        
-                        <div class="tech-item">
-                            <div class="tech-icon">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                            <div>
-                                <strong>Power BI & Tableau</strong><br>
-                                <small>Business Intelligence (opcional)</small>
-                            </div>
-                        </div>
+                        <div class="tech-item"><div class="tech-icon"><i class="fas fa-desktop"></i></div><div><strong>ArcGIS Pro</strong><br><small>Análisis espacial avanzado</small></div></div>
+                        <div class="tech-item"><div class="tech-icon"><i class="fas fa-cloud"></i></div><div><strong>ArcGIS Online</strong><br><small>Plataforma en la nube</small></div></div>
+                        <div class="tech-item"><div class="tech-icon"><i class="fab fa-python"></i></div><div><strong>Python & ArcPy</strong><br><small>Automatización de procesos</small></div></div>
+                        <div class="tech-item"><div class="tech-icon"><i class="fas fa-code"></i></div><div><strong>ArcGIS API for JavaScript</strong><br><small>Desarrollo web</small></div></div>
+                        <div class="tech-item"><div class="tech-icon"><i class="fas fa-satellite"></i></div><div><strong>Sentinel & Landsat</strong><br><small>Imágenes satelitales (opcional)</small></div></div>
+                        <div class="tech-item"><div class="tech-icon"><i class="fas fa-chart-bar"></i></div><div><strong>Power BI & Tableau</strong><br><small>Business Intelligence (opcional)</small></div></div>
                     </div>
-                    
-                    <a href="#contacto" class="btn-primary" data-modal="true">
-                        <i class="fas fa-cogs"></i> Conocer Más Detalles
-                    </a>
+                    <a href="#contacto" class="btn-primary" data-modal="true"><i class="fas fa-cogs"></i> Conocer Más Detalles</a>
                 </div>
-                
-                <div class="tech-image">
-                    <img src="public/elevacion.jpg" alt="ArcGIS Pro - Análisis Territorial" loading="lazy">
-                </div>
+                <div class="tech-image"><img src="public/elevacion.jpg" alt="ArcGIS Pro - Análisis Territorial" loading="lazy"></div>
             </div>
         </div>
     </section>
-    
-    <!-- Industries Section -->
+
+    <!-- Industries -->
     <section class="industries" id="industrias">
+        <div class="particles-layer" id="particles-industries"></div>
         <div class="container">
             <h2 class="section-title">Sectores que Atendemos</h2>
-            <p class="section-subtitle">Experiencia comprobada en sectores estratégicos con soluciones especializadas que generan valor real</p>
+            <p class="section-subtitle">Trabajamos para sectores estratégicos con soluciones especializadas que generan valor real</p>
             <div class="industries-grid">
-                <div class="industry-card">
-                    <h4><i class="fas fa-landmark"></i> Gobierno y Sector Público</h4>
-                    <p>Catastro digital, planificación urbana, gestión de servicios públicos y transparencia gubernamental</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-city"></i> Planeación Urbana</h4>
-                    <p>Estudios de crecimiento urbano, zonificación, análisis de densidad y planificación de infraestructura</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-vote-yea"></i> Procesos Electorales</h4>
-                    <p>Análisis electoral territorial, logística de votación, mapeo de tendencias y participación ciudadana</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-truck"></i> Transporte y Logística</h4>
-                    <p>Optimización de rutas, análisis de tráfico, gestión de flotas y planificación de infraestructura vial</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-leaf"></i> Medio Ambiente</h4>
-                    <p>Monitoreo ambiental, gestión de recursos naturales, análisis de cambio climático y evaluación de impactos</p>
-                </div>
-                <div class="industry-card">
-                    <h4><i class="fas fa-store"></i> Estudios de Mercado Territoriales</h4>
-                    <p>Análisis de ubicación de competencia, densidad poblacional, seguridad y características del entorno para decisiones comerciales estratégicas</p>
-                </div>
+                <div class="industry-card"><h4><i class="fas fa-landmark"></i> Gobierno y Sector Público</h4><p>Catastro digital, planificación urbana, gestión de servicios públicos y transparencia gubernamental</p></div>
+                <div class="industry-card"><h4><i class="fas fa-city"></i> Planeación Urbana</h4><p>Estudios de crecimiento urbano, zonificación y análisis de densidad</p></div>
+                <div class="industry-card"><h4><i class="fas fa-vote-yea"></i> Procesos Electorales</h4><p>Análisis electoral territorial, logística de votación, mapeo de tendencias y participación ciudadana</p></div>
+                <div class="industry-card"><h4><i class="fas fa-truck"></i> Transporte y Logística</h4><p>Optimización de rutas, análisis de tráfico y gestión de flotas</p></div>
+                <div class="industry-card"><h4><i class="fas fa-leaf"></i> Medio Ambiente</h4><p>Monitoreo ambiental, gestión de recursos naturales, análisis de cambio climático y evaluación de impactos</p></div>
+                <div class="industry-card"><h4><i class="fas fa-store"></i> Estudios de Mercado Territoriales</h4><p>Análisis de ubicación de competencia, densidad poblacional, seguridad y características del entorno para decisiones comerciales estratégicas</p></div>
             </div>
         </div>
     </section>
-    
-    <!-- CTA Section -->
+
+    <!-- CTA -->
     <section class="cta-section" id="contacto">
+        <div class="particles-layer" id="particles-cta"></div>
         <div class="cta-content">
             <h2>¿Tienes un reto territorial?</h2>
             <p>Agendemos una consulta gratuita para entender tu necesidad y proponerte un alcance y entregables concretos.</p>
-            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                <a href="mailto:info@geogis.solutions" class="btn-primary">
-                    <i class="fas fa-envelope"></i> Solicitar Consulta
-                </a>
-                <a href="tel:+523334028621" class="btn-secondary">
-                    <i class="fas fa-phone"></i> Llamar Ahora
-                </a>
-                <button class="btn-secondary" data-modal="true">
-                    <i class="fas fa-comments"></i> Chat Directo
-                </button>
+            <div style="display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;">
+                <a href="mailto:info@geogis.solutions" class="btn-primary"><i class="fas fa-envelope"></i> Solicitar Consulta</a>
+                <a href="tel:+523334028621" class="btn-secondary"><i class="fas fa-phone"></i> Llamar Ahora</a>
+                <button class="btn-secondary" data-modal="true"><i class="fas fa-comments"></i> Chat Directo</button>
             </div>
         </div>
     </section>
-    
+
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4><img src="public/logo.png" alt="GeoGIS Solutions" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 0.5rem;"> GeoGIS Solutions</h4>
+                    <h4><img src="public/logo.png" alt="GeoGIS Solutions" style="width:24px;height:24px;vertical-align:middle;margin-right:.5rem;"> GeoGIS Solutions</h4>
                     <p>Especialistas en soluciones geoespaciales para decisiones estratégicas. Convertimos datos territoriales en herramientas útiles que impulsan el crecimiento y la innovación.</p>
                     <div class="social-links">
                         <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -1419,9 +433,8 @@
                 </div>
                 <div class="footer-section">
                     <h4>Contacto Directo</h4>
-                    <p><i class="fas fa-envelope"></i> info@geogis.solutions</p>
-                    <p><i class="fas fa-phone"></i> +52 33 4028 6621</p>
-                    <p><i class="fas fa-whatsapp"></i> +52 33 4028 6621</p>
+                    <p><i class="fas fa-envelope"></i> geogissolutionsmx@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +52 33 3402 8621</p>
                     <p><i class="fas fa-map-marker-alt"></i> Guadalajara, Jalisco, México</p>
                     <p><i class="fas fa-clock"></i> Lun-Vie 9:00 AM - 6:00 PM CST</p>
                 </div>
@@ -1431,71 +444,42 @@
             </div>
         </div>
     </footer>
-    
+
     <!-- WhatsApp Widget -->
     <div class="whatsapp-widget" id="whatsappWidget">
-        <div class="whatsapp-button" onclick="toggleWhatsAppChat()">
-            <i class="fab fa-whatsapp"></i>
-        </div>
+        <div class="whatsapp-button" onclick="toggleWhatsAppChat()"><i class="fab fa-whatsapp"></i></div>
         <div class="whatsapp-chat" id="whatsappChat">
             <div class="whatsapp-header">
                 <button class="whatsapp-close" onclick="closeWhatsAppChat()">&times;</button>
-                <div class="whatsapp-avatar">
-                    <img src="public/logo.png" alt="GeoGIS" style="width: 24px; height: 24px; border-radius: 50%;">
-                </div>
+                <div class="whatsapp-avatar"><img src="public/logo.png" alt="GeoGIS" style="width:24px;height:24px;border-radius:50%;"></div>
                 <div class="whatsapp-info">
                     <h4>GeoGIS Solutions</h4>
-                    <div class="whatsapp-status">
-                        <span class="status-dot"></span>
-                        Generalmente responde en pocos minutos
-                    </div>
+                    <div class="whatsapp-status"><span class="status-dot"></span>Generalmente responde en pocos minutos</div>
                 </div>
             </div>
             <div class="whatsapp-body">
-                <div class="whatsapp-message">
-                    ¡Hola! 👋 Soy especialista en soluciones GIS. ¿En qué puedo ayudarte hoy?
-                </div>
+                <div class="whatsapp-message">¡Hola! 👋 Soy especialista en soluciones GIS. ¿En qué puedo ayudarte hoy?</div>
                 <div class="whatsapp-options">
-                    <a href="https://wa.me/523334028621?text=Hola%2C%20me%20interesa%20conocer%20sus%20soluciones%20GIS%20para%20mi%20empresa" class="whatsapp-option">
-                        <i class="fas fa-building"></i>
-                        Soluciones para mi organización
-                    </a>
-                    <a href="https://wa.me/523334028621?text=Necesito%20una%20consulta%20gratuita%20sobre%20an%C3%A1lisis%20territorial" class="whatsapp-option">
-                        <i class="fas fa-comments"></i>
-                        Consulta gratuita
-                    </a>
-                    <a href="https://wa.me/523334028621?text=Me%20interesa%20un%20estudio%20de%20mercado%20territorial" class="whatsapp-option">
-                        <i class="fas fa-map-marked-alt"></i>
-                        Estudio de mercado territorial
-                    </a>
-                    <a href="https://wa.me/523334028621?text=Tengo%20un%20proyecto%20espec%C3%ADfico%20que%20requiere%20an%C3%A1lisis%20geoespacial" class="whatsapp-option">
-                        <i class="fas fa-project-diagram"></i>
-                        Proyecto específico
-                    </a>
+                    <a href="https://wa.me/523334028621?text=Hola%2C%20me%20interesa%20conocer%20sus%20soluciones%20GIS%20para%20mi%20empresa" class="whatsapp-option"><i class="fas fa-building"></i>Soluciones para mi organización</a>
+                    <a href="https://wa.me/523334028621?text=Necesito%20una%20consulta%20gratuita%20sobre%20an%C3%A1lisis%20territorial" class="whatsapp-option"><i class="fas fa-comments"></i>Consulta gratuita</a>
+                    <a href="https://wa.me/523334028621?text=Me%20interesa%20un%20estudio%20de%20mercado%20territorial" class="whatsapp-option"><i class="fas fa-map-marked-alt"></i>Estudio de mercado territorial</a>
+                    <a href="https://wa.me/523334028621?text=Tengo%20un%20proyecto%20espec%C3%ADfico%20que%20requiere%20an%C3%A1lisis%20geoespacial" class="whatsapp-option"><i class="fas fa-project-diagram"></i>Proyecto específico</a>
                 </div>
             </div>
-            <div class="whatsapp-footer">
-                <a href="https://wa.me/523334028621?text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20GeoGIS%20Solutions">
-                    <i class="fab fa-whatsapp"></i>
-                    Iniciar conversación
-                </a>
-            </div>
+            <div class="whatsapp-footer"><a href="https://wa.me/523334028621?text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20GeoGIS%20Solutions"><i class="fab fa-whatsapp"></i>Iniciar conversación</a></div>
         </div>
     </div>
-    
+
     <!-- Contact Modal -->
     <div class="contact-modal" id="contactModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeContactModal()">&times;</button>
-            <h3 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">
-                <i class="fas fa-map"></i> Consulta Gratuita Personalizada
-            </h3>
+            <h3 style="margin-bottom:1.5rem;color:var(--primary);text-align:center;"><i class="fas fa-map"></i> Consulta Gratuita Personalizada</h3>
             <form class="modal-form" id="contactForm">
                 <input type="text" name="name" placeholder="Nombre completo *" required>
                 <input type="email" name="email" placeholder="Email corporativo *" required>
                 <input type="tel" name="phone" placeholder="Teléfono">
                 <input type="text" name="company" placeholder="Empresa u organización">
-                
                 <select name="industry">
                     <option value="">Selecciona tu sector</option>
                     <option value="gobierno">Gobierno y Sector Público</option>
@@ -1506,7 +490,6 @@
                     <option value="mercado">Estudios de Mercado Territoriales</option>
                     <option value="otro">Otro</option>
                 </select>
-                
                 <select name="service">
                     <option value="">¿Qué tipo de solución necesitas?</option>
                     <option value="mapas">Mapas e Informes Estáticos</option>
@@ -1518,539 +501,166 @@
                     <option value="mercado_territorial">Estudio de Mercado Territorial</option>
                     <option value="no_seguro">No estoy seguro</option>
                 </select>
-                
                 <textarea name="message" placeholder="Describe tu reto territorial, necesidades específicas o desafíos que enfrentas..."></textarea>
-                
-                <button type="submit" class="modal-submit">
-                    <i class="fas fa-paper-plane"></i> Enviar Consulta
-                </button>
+                <button type="submit" class="modal-submit"><i class="fas fa-paper-plane"></i> Enviar Consulta</button>
             </form>
-            
-            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
-                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">También puedes contactarnos directamente:</p>
-                <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
-                    <a href="mailto:info@geogis.solutions" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-envelope"></i> info@geogis.solutions
-                    </a>
-                    <a href="tel:+523334028621" style="color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-phone"></i> +52 33 4028 6621
-                    </a>
-                    <a href="https://wa.me/523334028621" style="color: var(--success); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </a>
+            <div style="text-align:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;">
+                <p style="color:#64748b;font-size:.9rem;margin-bottom:1rem;">También puedes contactarnos directamente:</p>
+                <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
+                    <a href="mailto:info@geogis.solutions" style="color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:.5rem;"><i class="fas fa-envelope"></i> info@geogis.solutions</a>
+                    <a href="tel:+523334028621" style="color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:.5rem;"><i class="fas fa-phone"></i> +52 33 4028 6621</a>
+                    <a href="https://wa.me/523334028621" style="color:var(--success);text-decoration:none;display:flex;align-items:center;gap:.5rem;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Particles.js library (añadido) -->
-    <!-- Scripts de las bibliotecas -->
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anime.js/3.2.1/anime.min.js"></script>
+    <!-- Libs -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anime.js/3.2.1/anime.min.js"></script>
 
-<!-- Lógica -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isMobile = window.innerWidth < 768;
-
-    // 1) Particles.js: constelación blanca minimal
-    particlesJS('particles-js', {
-      particles: {
-        number: { value: isMobile ? 50 : 90, density: { enable: true, value_area: 900 } },
-        color: { value: "#ffffff" },
-        shape: { type: ["circle","polygon"], polygon: { nb_sides: 6 } },
-        opacity: { value: 0.22, random: true, anim: { enable: !prefersReduced, speed: 0.6, opacity_min: 0.05, sync: false } },
-        size: { value: 2.2, random: true, anim: { enable: !prefersReduced, speed: 1, size_min: 0.8, sync: false } },
-        line_linked: { enable: true, distance: isMobile ? 110 : 140, color: "#ffffff", opacity: 0.25, width: 0.8 },
-        move: { enable: !prefersReduced, speed: isMobile ? 0.6 : 0.9, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: { enable: !prefersReduced, mode: ["grab","repulse"] },
-          onclick: { enable: !prefersReduced, mode: "push" },
-          resize: true
-        },
-        modes: {
-          grab: { distance: 160, line_linked: { opacity: 0.45 } },
-          repulse: { distance: 120, duration: 0.4 },
-          push: { particles_nb: 2 }
-        }
-      },
-      retina_detect: true
-    });
-
-    // Glow sutil al canvas + shimmer con anime.js
-    const waitCanvas = setInterval(() => {
-      const c = document.querySelector('#particles-js canvas');
-      if (c) {
-        c.style.filter = 'drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px rgba(255,255,255,.35))';
-        c.style.opacity = '0.95';
-        clearInterval(waitCanvas);
-
-        if (!prefersReduced && window.anime) {
-          anime({
-            targets: c,
-            opacity: [0.85, 1],
-            easing: 'easeInOutSine',
-            direction: 'alternate',
-            duration: 4000,
-            loop: true
-          });
-        }
-      }
-    }, 50);
-
-    // 2) Capa de “estrellas” en 3D (THREE.js) blanca y muy ligera
-    if (!prefersReduced && window.THREE) {
-      const container = document.getElementById('particles-js');
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      Object.assign(renderer.domElement.style, {
-        position: 'absolute',
-        inset: '0',
-        pointerEvents: 'none'
-      });
-      container.appendChild(renderer.domElement);
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 1, 1000);
-      camera.position.z = 200;
-
-      const geometry = new THREE.BufferGeometry();
-      const starCount = isMobile ? 140 : 280;
-      const positions = new Float32Array(starCount * 3);
-      for (let i = 0; i < starCount; i++) {
-        positions[i * 3 + 0] = (Math.random() - 0.5) * 600;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 400;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 300;
-      }
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-      const material = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 1.2,
-        sizeAttenuation: true,
-        transparent: true,
-        opacity: 0.6
-      });
-      const stars = new THREE.Points(geometry, material);
-      scene.add(stars);
-
-      let mouseX = 0, mouseY = 0;
-      if (!isMobile) {
-        document.addEventListener('mousemove', (e) => {
-          mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-          mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-      }
-
-      function tick() {
-        stars.rotation.y += 0.0007;
-        stars.rotation.x += 0.0003;
-        camera.position.x += (mouseX * 10 - camera.position.x) * 0.02;
-        camera.position.y += (-mouseY * 10 - camera.position.y) * 0.02;
-        renderer.render(scene, camera);
-        requestAnimationFrame(tick);
-      }
-      tick();
-
-      window.addEventListener('resize', () => {
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-      });
-    }
-  });
-</script>
-
-    
+    <!-- Particles + efectos -->
     <script>
-        // WhatsApp Widget Functions
-        function toggleWhatsAppChat() {
-            const chat = document.getElementById('whatsappChat');
-            chat.classList.toggle('active');
-        }
-        
-        function closeWhatsAppChat() {
-            const chat = document.getElementById('whatsappChat');
-            chat.classList.remove('active');
-        }
-        
-        // Close WhatsApp chat when clicking outside
-        document.addEventListener('click', (e) => {
-            const widget = document.getElementById('whatsappWidget');
-            const chat = document.getElementById('whatsappChat');
-            if (!widget.contains(e.target) && chat.classList.contains('active')) {
-                closeWhatsAppChat();
+      document.addEventListener('DOMContentLoaded', function () {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isMobile = window.innerWidth < 768;
+
+        // HERO (ya existía): constelación ligera
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: isMobile ? 50 : 90, density: { enable: true, value_area: 900 } },
+            color: { value: "#ffffff" },
+            shape: { type: ["circle","polygon"], polygon: { nb_sides: 6 } },
+            opacity: { value: 0.22, random: true, anim: { enable: !prefersReduced, speed: 0.6, opacity_min: 0.05, sync: false } },
+            size: { value: 2.2, random: true, anim: { enable: !prefersReduced, speed: 1, size_min: 0.8, sync: false } },
+            line_linked: { enable: true, distance: isMobile ? 110 : 140, color: "#ffffff", opacity: 0.25, width: 0.8 },
+            move: { enable: !prefersReduced, speed: isMobile ? 0.6 : 0.9, direction: "none", random: false, straight: false, out_mode: "out", bounce: false }
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: { onhover: { enable: !prefersReduced, mode: ["grab","repulse"] }, onclick: { enable: !prefersReduced, mode: "push" }, resize: true },
+            modes: { grab: { distance: 160, line_linked: { opacity: 0.45 } }, repulse: { distance: 120, duration: 0.4 }, push: { particles_nb: 2 } }
+          },
+          retina_detect: true
+        });
+
+        // Brillo sutil canvas
+        const waitCanvas = setInterval(() => {
+          const c = document.querySelector('#particles-js canvas');
+          if (c) {
+            c.style.filter = 'drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px rgba(255,255,255,.35))';
+            c.style.opacity = '0.95';
+            clearInterval(waitCanvas);
+            if (!prefersReduced && window.anime) {
+              anime({ targets: c, opacity: [0.85, 1], easing: 'easeInOutSine', direction: 'alternate', duration: 4000, loop: true });
             }
+          }
+        }, 50);
+
+        // Variantes por sección (todas en blanco para no cambiar paleta)
+        function makeParticles(id, opts){
+          if (!document.getElementById(id)) return;
+          particlesJS(id, Object.assign({
+            particles: {
+              color:{ value:"#ffffff" }, opacity:{ value:0.15 }, size:{ value:2, random:true },
+              move:{ enable: !prefersReduced, speed:0.7, out_mode:"out" }
+            }, interactivity:{ events:{ resize:true } }, retina_detect:true
+          }, opts));
+        }
+
+
+
+        // Visual: líneas más marcadas tipo “red”
+        makeParticles('particles-visual', {
+          particles:{ number:{ value:isMobile?40:80 }, line_linked:{ enable:true, distance:isMobile?90:130, opacity:0.25, width:0.7 }, size:{ value:1.8 } }
         });
-        
-        // Global functions for WhatsApp widget
-        window.toggleWhatsAppChat = toggleWhatsAppChat;
-        window.closeWhatsAppChat = closeWhatsAppChat;
-        
-        // Variables globales
-        let scrollProgress = document.getElementById('scrollProgress');
-        let header = document.getElementById('header');
-        let navLinks = document.getElementById('navLinks');
-        let mobileToggle = document.getElementById('mobileToggle');
-        let contactModal = document.getElementById('contactModal');
-        let contactForm = document.getElementById('contactForm');
-        let lastScrollTop = 0;
-        
-        // Scroll Progress Indicator
-        function updateScrollProgress() {
-            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            scrollProgress.style.width = scrollPercent + '%';
-        }
-        
-        // Header Effects
-        function updateHeader() {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            // Background and shadow effects
-            if (scrollTop > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.boxShadow = 'none';
-            }
-            
-            // Hide/show header on scroll
-            if (scrollTop > lastScrollTop && scrollTop > 500) {
-                header.style.transform = 'translateY(-100%)';
-            } else {
-                header.style.transform = 'translateY(0)';
-            }
-            lastScrollTop = scrollTop;
-        }
-        
-        // Smooth Scrolling
-        function initSmoothScrolling() {
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        // Close mobile menu if open
-                        navLinks.classList.remove('active');
-                        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                });
-            });
-        }
-        
-        // Mobile Menu Toggle
-        function initMobileMenu() {
-            mobileToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                
-                if (navLinks.classList.contains('active')) {
-                    mobileToggle.innerHTML = '<i class="fas fa-times"></i>';
-                } else {
-                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-            // Close menu when clicking on a link
-            navLinks.addEventListener('click', (e) => {
-                if (e.target.tagName === 'A') {
-                    navLinks.classList.remove('active');
-                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-        }
-        
-        // Intersection Observer for Animations
-        function initAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        entry.target.classList.add('fade-in');
-                    }
-                });
-            }, observerOptions);
-            // Apply to elements
-            document.querySelectorAll('.feature-card, .product-card, .industry-card, .showcase-item, .tech-item').forEach(element => {
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(30px)';
-                element.style.transition = 'all 0.6s ease';
-                observer.observe(element);
-            });
-            // Section reveals
-            document.querySelectorAll('section').forEach((section, index) => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(50px)';
-                section.style.transition = 'all 0.8s ease';
-                section.style.transitionDelay = `${index * 0.1}s`;
-                observer.observe(section);
-            });
-        }
-        
-        // Image Lazy Loading
-        function initLazyLoading() {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.classList.add('loaded');
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                imageObserver.observe(img);
-            });
-        }
-        
-        // Contact Modal Functions
-        function openContactModal() {
-            contactModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-        function closeContactModal() {
-            contactModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Global functions for modal
-        window.openContactModal = openContactModal;
-        window.closeContactModal = closeContactModal;
-        
-        function initContactModal() {
-            // Open modal with buttons
-            document.addEventListener('click', (e) => {
-                if (e.target.hasAttribute('data-modal') || e.target.closest('[data-modal]')) {
-                    e.preventDefault();
-                    openContactModal();
-                }
-            });
-            // Close modal with escape key or click outside
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeContactModal();
-            });
-            document.addEventListener('click', (e) => {
-                if (e.target === contactModal) closeContactModal();
-            });
-            // Form submission
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const submitBtn = contactForm.querySelector('.modal-submit');
-                const originalText = submitBtn.innerHTML;
-                
-                // Simulate sending
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-                submitBtn.disabled = true;
-                
-                // Collect form data
-                const formData = new FormData(contactForm);
-                const data = Object.fromEntries(formData.entries());
-                
-                // Simulate API call
-                setTimeout(() => {
-                    submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado! Te contactaremos pronto';
-                    submitBtn.style.background = 'var(--success)';
-                    
-                    // Log form data (replace with actual API call)
-                    console.log('Form Data:', data);
-                    
-                    setTimeout(() => {
-                        closeContactModal();
-                        contactForm.reset();
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                        submitBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--accent))';
-                        
-                        // Show success message
-                        showNotification('¡Gracias! Hemos recibido tu consulta. Te contactaremos dentro de 24 horas.', 'success');
-                    }, 2000);
-                }, 1500);
-            });
-        }
-        
-        // Notification System
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: ${type === 'success' ? 'var(--success)' : 'var(--primary)'};
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 10px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-                z-index: 10002;
-                transform: translateX(400px);
-                transition: transform 0.3s ease;
-                max-width: 300px;
-            `;
-            notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 100);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateX(400px)';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 5000);
-        }
-        
-        // Parallax Effects
-        function initParallax() {
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const heroImage = document.querySelector('.hero-image img');
-                
-                if (heroImage && scrolled < window.innerHeight) {
-                    const rate = scrolled * 0.3;
-                    heroImage.style.transform = `perspective(1000px) rotateY(-5deg) rotateX(5deg) translateY(${rate}px)`;
-                }
-            });
-        }
-        
-        // Enhanced Hover Effects
-        function initHoverEffects() {
-            document.querySelectorAll('.feature-card, .product-card').forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'translateY(-10px) scale(1.02)';
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'translateY(0) scale(1)';
-                });
-            });
-            // Showcase items special effects
-            document.querySelectorAll('.showcase-item').forEach(item => {
-                item.addEventListener('mouseenter', () => {
-                    const overlay = item.querySelector('.showcase-overlay');
-                    if (overlay) {
-                        overlay.style.background = 'linear-gradient(transparent, rgba(79, 70, 229, 0.9))';
-                    }
-                });
-                
-                item.addEventListener('mouseleave', () => {
-                    const overlay = item.querySelector('.showcase-overlay');
-                    if (overlay) {
-                        overlay.style.background = 'linear-gradient(transparent, rgba(0, 0, 0, 0.8))';
-                    }
-                });
-            });
-        }
-        
-        // Scroll Event Listener
-        function initScrollEvents() {
-            let ticking = false;
-            
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(() => {
-                        updateScrollProgress();
-                        updateHeader();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-        }
-        
-        // Resize Handler
-        function initResizeHandler() {
-            window.addEventListener('resize', () => {
-                // Close mobile menu on resize
-                if (window.innerWidth > 768) {
-                    navLinks.classList.remove('active');
-                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-        }
-        
-        // Form Validation Enhancement
-        function initFormValidation() {
-            const inputs = contactForm.querySelectorAll('input, select, textarea');
-            
-            inputs.forEach(input => {
-                input.addEventListener('blur', () => {
-                    if (input.hasAttribute('required') && !input.value.trim()) {
-                        input.style.borderColor = '#ef4444';
-                    } else if (input.type === 'email' && input.value && !isValidEmail(input.value)) {
-                        input.style.borderColor = '#ef4444';
-                    } else {
-                        input.style.borderColor = '#e2e8f0';
-                    }
-                });
-                
-                input.addEventListener('focus', () => {
-                    input.style.borderColor = 'var(--primary)';
-                });
-            });
-        }
-        
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-        
-        // Initialize Everything
-        document.addEventListener('DOMContentLoaded', () => {
-            // Core functionality
-            initSmoothScrolling();
-            initMobileMenu();
-            initAnimations();
-            initLazyLoading();
-            initContactModal();
-            initScrollEvents();
-            initResizeHandler();
-            initFormValidation();
-            
-            // Enhanced features
-            initParallax();
-            initHoverEffects();
-            
-            // Console message
-            console.log('🗺️ GeoGIS Solutions - Landing Page Loaded Successfully!');
-            
-            // Load complete notification
-            setTimeout(() => {
-                showNotification('¡Bienvenido a GeoGIS Solutions! 🌍', 'info');
-            }, 1000);
+
+        // Products: burbujas lentas (sin líneas)
+        makeParticles('particles-products', {
+          particles:{ number:{ value:isMobile?28:55 }, size:{ value:3 }, move:{ speed:0.5 }, line_linked:{ enable:false } }
         });
-        
-        // Error handling
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e.error);
+
+
+        // Industries: niebla estelar densa
+        makeParticles('particles-industries', {
+          particles:{ number:{ value:isMobile?70:120 }, size:{ value:1.6 }, line_linked:{ enable:false }, opacity:{ value:0.12 } }
         });
-        
-        // Performance monitoring
-        window.addEventListener('load', () => {
-            const loadTime = performance.now();
-            console.log(`Page loaded in ${Math.round(loadTime)}ms`);
+
+        // CTA: pocos orbes grandes
+        makeParticles('particles-cta', {
+          particles:{ number:{ value:isMobile?18:28 }, size:{ value:4 }, line_linked:{ enable:false }, move:{ speed:0.4 } }
         });
+
+        // THREE.js capa sutil en hero
+        if (!prefersReduced && window.THREE) {
+          const container = document.getElementById('particles-js');
+          const renderer = new THREE.WebGLRenderer({ alpha:true, antialias:true });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+          renderer.setSize(container.clientWidth, container.clientHeight);
+          Object.assign(renderer.domElement.style,{ position:'absolute', inset:'0', pointerEvents:'none' });
+          container.appendChild(renderer.domElement);
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(60, container.clientWidth/container.clientHeight, 1, 1000);
+          camera.position.z = 200;
+
+          const geometry = new THREE.BufferGeometry();
+          const starCount = isMobile ? 140 : 280;
+          const positions = new Float32Array(starCount*3);
+          for (let i=0;i<starCount;i++){ positions[i*3]=(Math.random()-.5)*600; positions[i*3+1]=(Math.random()-.5)*400; positions[i*3+2]=(Math.random()-.5)*300; }
+          geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
+          const material = new THREE.PointsMaterial({ color:0xffffff, size:1.2, sizeAttenuation:true, transparent:true, opacity:0.6 });
+          const stars = new THREE.Points(geometry, material);
+          scene.add(stars);
+
+          let mouseX=0, mouseY=0;
+          if (!isMobile){
+            document.addEventListener('mousemove', e=>{ mouseX=(e.clientX/window.innerWidth-.5)*2; mouseY=(e.clientY/window.innerHeight-.5)*2; });
+          }
+          function tick(){
+            stars.rotation.y += 0.0007;
+            stars.rotation.x += 0.0003;
+            camera.position.x += (mouseX*10 - camera.position.x)*0.02;
+            camera.position.y += (-mouseY*10 - camera.position.y)*0.02;
+            renderer.render(scene,camera);
+            requestAnimationFrame(tick);
+          }
+          tick();
+          window.addEventListener('resize', ()=>{ renderer.setSize(container.clientWidth, container.clientHeight); camera.aspect = container.clientWidth/container.clientHeight; camera.updateProjectionMatrix(); });
+        }
+      });
+    </script>
+
+    <!-- Lógica UI existente (sin cambios de color/función) -->
+    <script>
+        function toggleWhatsAppChat(){ document.getElementById('whatsappChat').classList.toggle('active'); }
+        function closeWhatsAppChat(){ document.getElementById('whatsappChat').classList.remove('active'); }
+        document.addEventListener('click',(e)=>{ const w=document.getElementById('whatsappWidget'); const c=document.getElementById('whatsappChat'); if(!w.contains(e.target)&&c.classList.contains('active')) closeWhatsAppChat(); });
+        window.toggleWhatsAppChat=toggleWhatsAppChat; window.closeWhatsAppChat=closeWhatsAppChat;
+
+        let scrollProgress=document.getElementById('scrollProgress'), header=document.getElementById('header'), navLinks=document.getElementById('navLinks'), mobileToggle=document.getElementById('mobileToggle'), contactModal=document.getElementById('contactModal'), contactForm=document.getElementById('contactForm'), lastScrollTop=0;
+
+        function updateScrollProgress(){ const p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100; scrollProgress.style.width=p+'%'; }
+        function updateHeader(){ const st=window.pageYOffset||document.documentElement.scrollTop; if(st>100){ header.style.background='rgba(255,255,255,0.98)'; header.style.boxShadow='0 2px 20px rgba(0,0,0,0.1)'; } else { header.style.background='rgba(255,255,255,0.95)'; header.style.boxShadow='none'; } if(st>lastScrollTop&&st>500){ header.style.transform='translateY(-100%)'; } else { header.style.transform='translateY(0)'; } lastScrollTop=st; }
+        function initSmoothScrolling(){ document.querySelectorAll('a[href^="#"]').forEach(a=>{ a.addEventListener('click',function(e){ e.preventDefault(); const t=document.querySelector(this.getAttribute('href')); if(t){ t.scrollIntoView({behavior:'smooth',block:'start'}); navLinks.classList.remove('active'); mobileToggle.innerHTML='<i class="fas fa-bars"></i>'; } }); }); }
+        function initMobileMenu(){ mobileToggle.addEventListener('click',()=>{ navLinks.classList.toggle('active'); mobileToggle.innerHTML = navLinks.classList.contains('active')?'<i class="fas fa-times"></i>':'<i class="fas fa-bars"></i>'; }); navLinks.addEventListener('click',(e)=>{ if(e.target.tagName==='A'){ navLinks.classList.remove('active'); mobileToggle.innerHTML='<i class="fas fa-bars"></i>'; } }); }
+        function initAnimations(){ const o=new IntersectionObserver((es)=>{ es.forEach(en=>{ if(en.isIntersecting){ en.target.style.opacity='1'; en.target.style.transform='translateY(0)'; en.target.classList.add('fade-in'); } }); },{threshold:.1, rootMargin:'0px 0px -50px 0px'}); document.querySelectorAll('.feature-card,.product-card,.industry-card,.showcase-item,.tech-item').forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(30px)'; el.style.transition='all .6s ease'; o.observe(el); }); document.querySelectorAll('section').forEach((s,i)=>{ s.style.opacity='0'; s.style.transform='translateY(50px)'; s.style.transition='all .8s ease'; s.style.transitionDelay=`${i*.1}s`; o.observe(s); }); }
+        function initLazyLoading(){ const io=new IntersectionObserver((es)=>{ es.forEach(en=>{ if(en.isIntersecting){ const img=en.target; img.classList.add('loaded'); io.unobserve(img); } }); }); document.querySelectorAll('img[loading="lazy"]').forEach(img=>io.observe(img)); }
+        function openContactModal(){ contactModal.style.display='flex'; document.body.style.overflow='hidden'; }
+        function closeContactModal(){ contactModal.style.display='none'; document.body.style.overflow='auto'; }
+        window.openContactModal=openContactModal; window.closeContactModal=closeContactModal;
+        function initContactModal(){ document.addEventListener('click',(e)=>{ if(e.target.hasAttribute('data-modal')||e.target.closest('[data-modal]')){ e.preventDefault(); openContactModal(); } }); document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeContactModal(); }); document.addEventListener('click',(e)=>{ if(e.target===contactModal) closeContactModal(); }); contactForm.addEventListener('submit',(e)=>{ e.preventDefault(); const btn=contactForm.querySelector('.modal-submit'); const t=btn.innerHTML; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Enviando...'; btn.disabled=true; const data=Object.fromEntries(new FormData(contactForm).entries()); setTimeout(()=>{ btn.innerHTML='<i class="fas fa-check"></i> ¡Enviado! Te contactaremos pronto'; btn.style.background='var(--success)'; console.log('Form Data:',data); setTimeout(()=>{ closeContactModal(); contactForm.reset(); btn.innerHTML=t; btn.disabled=false; btn.style.background='linear-gradient(135deg, var(--primary), var(--accent))'; showNotification('¡Gracias! Hemos recibido tu consulta. Te contactaremos dentro de 24 horas.','success'); },2000); },1500); }); }
+        function showNotification(m,type='info'){ const n=document.createElement('div'); n.style.cssText=`position:fixed;top:100px;right:20px;background:${type==='success'?'var(--success)':'var(--primary)'};color:#fff;padding:1rem 2rem;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,.2);z-index:10002;transform:translateX(400px);transition:transform .3s ease;max-width:300px;`; n.innerHTML=`<div style="display:flex;align-items:center;gap:.5rem;"><i class="fas fa-${type==='success'?'check-circle':'info-circle'}"></i><span>${m}</span></div>`; document.body.appendChild(n); setTimeout(()=>{ n.style.transform='translateX(0)'; },100); setTimeout(()=>{ n.style.transform='translateX(400px)'; setTimeout(()=>{ document.body.removeChild(n); },300); },5000); }
+        function initParallax(){ window.addEventListener('scroll',()=>{ const s=window.pageYOffset; const hi=document.querySelector('.hero-image img'); if(hi && s<window.innerHeight){ const r=s*0.3; hi.style.transform=`perspective(1000px) rotateY(-5deg) rotateX(5deg) translateY(${r}px)`; } }); }
+        function initHoverEffects(){ document.querySelectorAll('.feature-card,.product-card').forEach(c=>{ c.addEventListener('mouseenter',()=>{ c.style.transform='translateY(-10px) scale(1.02)'; }); c.addEventListener('mouseleave',()=>{ c.style.transform='translateY(0) scale(1)'; }); }); document.querySelectorAll('.showcase-item').forEach(i=>{ i.addEventListener('mouseenter',()=>{ const o=i.querySelector('.showcase-overlay'); if(o) o.style.background='linear-gradient(transparent, rgba(79,70,229,0.9))'; }); i.addEventListener('mouseleave',()=>{ const o=i.querySelector('.showcase-overlay'); if(o) o.style.background='linear-gradient(transparent, rgba(0,0,0,0.8))'; }); }); }
+        function initScrollEvents(){ let ticking=false; window.addEventListener('scroll',()=>{ if(!ticking){ requestAnimationFrame(()=>{ updateScrollProgress(); updateHeader(); ticking=false; }); ticking=true; } }); }
+        function initResizeHandler(){ window.addEventListener('resize',()=>{ if(window.innerWidth>768){ navLinks.classList.remove('active'); mobileToggle.innerHTML='<i class="fas fa-bars"></i>'; } }); }
+        function initFormValidation(){ const inputs=contactForm.querySelectorAll('input, select, textarea'); inputs.forEach(input=>{ input.addEventListener('blur',()=>{ if(input.hasAttribute('required') && !input.value.trim()){ input.style.borderColor='#ef4444'; } else if(input.type==='email' && input.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)){ input.style.borderColor='#ef4444'; } else { input.style.borderColor='#e2e8f0'; } }); input.addEventListener('focus',()=>{ input.style.borderColor='var(--primary)'; }); }); }
+
+        document.addEventListener('DOMContentLoaded',()=>{ initSmoothScrolling(); initMobileMenu(); initAnimations(); initLazyLoading(); initContactModal(); initScrollEvents(); initResizeHandler(); initFormValidation(); initParallax(); initHoverEffects(); console.log('🗺️ GeoGIS Solutions - Landing Page Loaded Successfully!'); setTimeout(()=>{ showNotification('¡Bienvenido a GeoGIS Solutions! 🌍','info'); },1000); });
+        window.addEventListener('error',(e)=>{ console.error('Global error:', e.error); });
+        window.addEventListener('load',()=>{ const t=performance.now(); console.log(`Page loaded in ${Math.round(t)}ms`); });
     </script>
 </body>
 </html>
