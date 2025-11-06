@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   description: 'Especialistas en soluciones GIS. Convertimos datos territoriales en mapas, dashboards y aplicaciones que apoyan decisiones de gobierno y empresa.',
   keywords: 'GIS, ArcGIS, mapas interactivos, análisis geoespacial, dashboards, WebGIS, estudios mercado territorial, consultoría SIG',
   icons: {
-    icon: '/favicon.png',
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
 }
 
@@ -19,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
       </head>
       <body>
