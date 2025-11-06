@@ -47,9 +47,10 @@ export default function Home() {
     // Smooth scrolling
     const initSmoothScrolling = () => {
       document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', function(e) {
+        a.addEventListener('click', (e) => {
           e.preventDefault()
-          const target = document.querySelector((this as HTMLAnchorElement).getAttribute('href') || '')
+          const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href')
+          const target = href ? document.querySelector(href) : null
           if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' })
             setNavLinksActive(false)
