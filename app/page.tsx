@@ -305,11 +305,12 @@ export default function Home() {
         </nav>
       </header>
 
-      <section className="hero" id="inicio">
+      <main>
+      <section className="hero" id="inicio" itemScope itemType="https://schema.org/WebPage">
         <div id="particles-js" aria-hidden="true"></div>
         <div className="hero-container">
           <div className="hero-content">
-            <h1>Inteligencia geoespacial para decidir mejor</h1>
+            <h1 itemProp="headline">Inteligencia geoespacial para decidir mejor</h1>
             <p>Convertimos datos territoriales en mapas, tableros y aplicaciones que apoyan decisiones de gobierno y empresa. Trabajamos con ArcGIS y metodologías claras para entregar resultados medibles.</p>
             <div className="hero-buttons">
               <a href="#productos" className="btn-primary"><i className="fas fa-map"></i> Explorar Soluciones</a>
@@ -322,9 +323,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="features" id="servicios">
+      <section className="features" id="servicios" itemScope itemType="https://schema.org/Service">
         <div className="container">
-          <h2 className="section-title">¿Por Qué Elegirnos?</h2>
+          <h2 className="section-title" itemProp="name">¿Por Qué Elegirnos?</h2>
           <p className="section-subtitle">Combinamos experiencia con ArcGIS, metodologías claras y buenas prácticas para entregar entregables listos para usar</p>
           <div className="features-grid">
             <div className="feature-card fade-in">
@@ -413,15 +414,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="products" id="productos">
+      <section className="products" id="productos" itemScope itemType="https://schema.org/ItemList">
         <div className="particles-layer" id="particles-products"></div>
         <div className="container">
-          <h2 className="section-title">Portafolio de Soluciones</h2>
+          <h2 className="section-title" itemProp="name">Portafolio de Soluciones</h2>
           <p className="section-subtitle">Desde mapas básicos hasta infraestructura empresarial completa, tenemos la solución adecuada para tu necesidad</p>
           <div className="products-grid">
-            <div className="product-card">
+            <article className="product-card" itemScope itemType="https://schema.org/Service">
               <div className="product-badge">Básico</div>
-              <h3>Mapas e Informes Estáticos</h3>
+              <h3 itemProp="name">Mapas e Informes Estáticos</h3>
               <ul>
                 <li>Mapas en alta resolución (PNG, JPEG, PDF)</li>
                 <li>Informes geográficos profesionales</li>
@@ -429,10 +430,10 @@ export default function Home() {
                 <li>Cartografía temática personalizada</li>
                 <li>Ideal para reportes y presentaciones</li>
               </ul>
-            </div>
-            <div className="product-card">
+            </article>
+            <article className="product-card" itemScope itemType="https://schema.org/Service">
               <div className="product-badge">Intermedio</div>
-              <h3>Dashboards Interactivos</h3>
+              <h3 itemProp="name">Dashboards Interactivos</h3>
               <ul>
                 <li>ArcGIS Dashboards con indicadores y filtros</li>
                 <li>Widgets interactivos y KPIs territoriales</li>
@@ -440,10 +441,10 @@ export default function Home() {
                 <li>Integración con bases de datos existentes</li>
                 <li>Perfecto para monitoreo operativo</li>
               </ul>
-            </div>
-            <div className="product-card">
+            </article>
+            <article className="product-card" itemScope itemType="https://schema.org/Service">
               <div className="product-badge">Estándar</div>
-              <h3>WebGIS Interactivo</h3>
+              <h3 itemProp="name">WebGIS Interactivo</h3>
               <ul>
                 <li>Mapas web accesibles desde cualquier dispositivo</li>
                 <li>Herramientas de consulta y análisis integradas</li>
@@ -451,10 +452,10 @@ export default function Home() {
                 <li>Permisos por usuario y control de acceso</li>
                 <li>Capacitación básica incluida</li>
               </ul>
-            </div>
-            <div className="product-card">
+            </article>
+            <article className="product-card" itemScope itemType="https://schema.org/Service">
               <div className="product-badge">Avanzado</div>
-              <h3>Aplicaciones Móviles de Campo</h3>
+              <h3 itemProp="name">Aplicaciones Móviles de Campo</h3>
               <ul>
                 <li>Field Maps para levantamiento de datos en campo</li>
                 <li>Survey123 para recolección estructurada</li>
@@ -462,10 +463,10 @@ export default function Home() {
                 <li>Sincronización offline/online</li>
                 <li>Optimizado para tablets y smartphones</li>
               </ul>
-            </div>
-            <div className="product-card">
+            </article>
+            <article className="product-card" itemScope itemType="https://schema.org/Service">
               <div className="product-badge">Enterprise</div>
-              <h3>Infraestructura GIS</h3>
+              <h3 itemProp="name">Infraestructura GIS</h3>
               <ul>
                 <li>Configuración de ArcGIS Enterprise</li>
                 <li>Servidor de mapas y bases de datos geoespaciales</li>
@@ -473,10 +474,10 @@ export default function Home() {
                 <li>Integración con sistemas existentes</li>
                 <li>Arquitectura escalable y documentada</li>
               </ul>
-            </div>
-            <div className="product-card">
+            </article>
+            <article className="product-card" itemScope itemType="https://schema.org/Service">
               <div className="product-badge">A Demanda</div>
-              <h3>Análisis Avanzado</h3>
+              <h3 itemProp="name">Análisis Avanzado</h3>
               <ul>
                 <li>Modelos espaciales específicos (idoneidad territorial)</li>
                 <li>Estudios de mercado territoriales detallados</li>
@@ -484,7 +485,7 @@ export default function Home() {
                 <li>Visualización 3D (cuando datos lo justifican)</li>
                 <li>Solución completamente personalizada</li>
               </ul>
-            </div>
+            </article>
           </div>
         </div>
       </section>
@@ -532,10 +533,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="industries" id="industrias">
+      <section className="industries" id="industrias" itemScope itemType="https://schema.org/ItemList">
         <div className="particles-layer" id="particles-industries"></div>
         <div className="container">
-          <h2 className="section-title">Sectores que Atendemos</h2>
+          <h2 className="section-title" itemProp="name">Sectores que Atendemos</h2>
           <p className="section-subtitle">Trabajamos para sectores estratégicos con soluciones especializadas que generan valor real</p>
           <div className="industries-grid">
             <div className="industry-card">
@@ -566,10 +567,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="cta-section" id="contacto">
+      <section className="cta-section" id="contacto" itemScope itemType="https://schema.org/ContactPage">
         <div className="particles-layer" id="particles-cta"></div>
         <div className="cta-content">
-          <h2>¿Tienes un reto territorial?</h2>
+          <h2 itemProp="name">¿Tienes un reto territorial?</h2>
           <p>Agendemos una consulta gratuita para entender tu necesidad y proponerte un alcance y entregables concretos.</p>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="mailto:info@geogis.solutions" className="btn-primary"><i className="fas fa-envelope"></i> Solicitar Consulta</a>
@@ -624,6 +625,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      </main>
 
       <div className="whatsapp-widget" id="whatsappWidget">
         <div className="whatsapp-button" onClick={() => setWhatsappChatActive(!whatsappChatActive)}>
